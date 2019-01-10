@@ -1,0 +1,26 @@
+{
+  "name": "mnSystem",
+  "version": "1.0.0",
+  "description": "person blog",
+  "author": "Bonnie",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "nuxt": "^2.0.0",
+    "koa": "^2.5.2",
+    "@nuxtjs/axios": "^5.0.0",
+    "echarts": "^4.2.0-rc.2",
+    "iview": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "vue-quill-editor": "^3.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
