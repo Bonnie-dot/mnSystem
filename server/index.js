@@ -7,22 +7,17 @@ const session = require('koa-session');
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-const admin=require('./api/admin');
-app.use(bodyParser());
+const admin=require('./model/admin/admin');
+const passport=require('koa-passport');
+//session
 app.keys = ['some secret hurr'];
- 
-const CONFIG = {
-  key: 'koa:sess', 
-  maxAge: 86400000,
-  autoCommit: true, /** (boolean) automatically commit headers (default true) */
-  overwrite: true, /** (boolean) can overwrite or not (default true) */
-  httpOnly: true, /** (boolean) httpOnly or not (default true) */
-  signed: true, /** (boolean) signed or not (default true) */
-  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
-  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-};
- 
-app.use(session(CONFIG, app));
+app.use(session({}, app));
+//body-parseer
+app.use(bodyParser());
+//authentication
+require('./auth')
+app.use(passport.initialize())
+app.use(passport.session())
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
@@ -36,13 +31,6 @@ async function start() {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-  app.use(async (ctx,next)=>{//拦截登录 没有做好
-    if(!ctx.session.userName&&ctx.originalUrl.indexOf('/login')==-1){
-      ctx.redirect='/login';
-    }
-    await next();
-   
-  })
   router.use('/admin',admin);
   app.use(router.routes()).use(router.allowedMethods());
   app.use(ctx => {

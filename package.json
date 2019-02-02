@@ -17,14 +17,15 @@
     "iview": "^3.2.1",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
+    "koa-passport": "^4.1.1",
     "koa-router": "^7.4.0",
     "md5": "^2.2.1",
     "mongodb": "^3.1.10",
     "nuxt": "^2.0.0",
+    "passport-local": "^1.0.0",
     "vue-quill-editor": "^3.0.6"
   },
   "devDependencies": {
-    "koa-session": "^5.10.1",
     "nodemon": "^1.11.0"
   }
 }

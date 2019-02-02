@@ -81,10 +81,10 @@ export default {
           this.formInline.password=md5(this.formInline.password);
           this.$axios.post('/admin/login',this.formInline).then(res=>{
            let {data}=res;
-            if(data.code==1){
+            if(data.success){
               this.$Message.success('登录成功');
               setTimeout(_=>{
-                location.href="http://localhost:3000";
+                location.href="http://localhost:3000/front";
               },1000);
             }else{
               this.$Message.error(data.msg);
