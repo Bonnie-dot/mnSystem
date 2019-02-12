@@ -7,17 +7,13 @@ const session = require('koa-session');
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-const admin=require('./model/admin/admin');
-const passport=require('koa-passport');
+require('./models')
+const index=require('./model/admin/index');
 //session
 app.keys = ['some secret hurr'];
 app.use(session({}, app));
 //body-parseer
 app.use(bodyParser());
-//authentication
-require('./auth')
-app.use(passport.initialize())
-app.use(passport.session())
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
@@ -31,7 +27,7 @@ async function start() {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-  router.use('/admin',admin);
+  router.use('/admin/index',index);
   app.use(router.routes()).use(router.allowedMethods());
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset

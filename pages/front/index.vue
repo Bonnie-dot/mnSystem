@@ -163,6 +163,7 @@ export default {
     }
   },
   mounted() {
+    this.getData();
     this.getVisitNumber();
     this.getArticleNumber();
   },
@@ -263,6 +264,11 @@ export default {
       }
       var myChart = this.$echarts.init(echart)
       myChart.setOption(option)
+    },
+    getData(){
+        this.$axios.post('/admin/index/visitorData').then(res=>{
+            console.log(res);
+        });
     }
   }
 }

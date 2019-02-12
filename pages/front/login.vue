@@ -79,7 +79,7 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.formInline.password=md5(this.formInline.password);
-          this.$axios.post('/admin/login',this.formInline).then(res=>{
+          this.$axios.post('/admin/index/login',this.formInline).then(res=>{
            let {data}=res;
             if(data.success){
               this.$Message.success('登录成功');
