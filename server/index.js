@@ -7,8 +7,8 @@ const session = require('koa-session');
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-require('./models')
-const index=require('./model/admin/index');
+const admin=require('./routes/admin');
+const db=require('./models');
 //session
 app.keys = ['some secret hurr'];
 app.use(session({}, app));
@@ -27,7 +27,7 @@ async function start() {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-  router.use('/admin/index',index);
+  router.use('/admin',admin);
   app.use(router.routes()).use(router.allowedMethods());
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset

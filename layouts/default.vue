@@ -1,3 +1,14 @@
+<style>
+.avator img{
+  width:50px;
+  height:50px;
+  border-radius: 50%;
+  position: absolute;
+  top:10%;
+  right: 4%;
+}
+</style>
+
 <template>
   <div class="layout">
     <Layout>
@@ -16,7 +27,9 @@
                   <DropdownItem>退出登录</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <Avatar src="images/username.jpg" size="large"/>
+              <div class="avator">
+                <img src="~/assets/images/avator.jpg">
+            </div>
             </div>
           </div>
         </Menu>
@@ -85,13 +98,19 @@
   </div>
 </template>
 <script>
+import webStorageCache from 'web-storage-cache'
+const ws=new webStorageCache();
 export default {
   data() {
     return {
-      username: 'Bonnie'
+      username: this.$store.username
     }
   },
-  computed: {}
+  created(){
+   if(!ws.get('token')){//核查是否登录
+         this.$router.push('/admin/login')
+      }
+  }
 }
 </script>
 

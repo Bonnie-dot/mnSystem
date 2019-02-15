@@ -48,6 +48,8 @@ html,body,.container,#__nuxt,#__layout{
 </template>
 <script>
 import md5 from "md5"
+import { mapState,mapMutations  } from 'vuex'
+import WebStorageCache from 'web-storage-cache'
 export default {
   layout: "login",
   data() {
@@ -74,24 +76,34 @@ export default {
       }
     };
   },
+  computed: mapState('admin',{
+      token:state => state.token,
+      user:state=>state.user
+    }),
   methods: {
+    ...mapMutations('admin',['setUser','setToken']),
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      var self=this;
+      self.$refs[name].validate(valid => {
         if (valid) {
-          this.formInline.password=md5(this.formInline.password);
-          this.$axios.post('/admin/index/login',this.formInline).then(res=>{
-           let {data}=res;
-            if(data.success){
-              this.$Message.success('登录成功');
+          self.formInline.password=md5(self.formInline.password);
+          self.$axios.post('/admin/user/login',self.formInline).then(res=>{
+           let {data,success}=res.data;
+            if(success){
+              let ws=new WebStorageCache();
+              ws.set('token',data.token);
+              self.$Message.success('登录成功');
+              self.setToken(data.token);
+              self.setUser(self.formInline.username);
               setTimeout(_=>{
-                location.href="http://localhost:3000/front";
+                 self.$router.push('/admin')
               },1000);
             }else{
-              this.$Message.error(data.msg);
+              self.$Message.error(data.msg);
             }
           });
         } else {
-          this.$Message.error("请填写完整信息!");
+          self.$Message.error("请填写完整信息!");
         }
       });
     }

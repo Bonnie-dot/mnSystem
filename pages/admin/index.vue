@@ -30,7 +30,7 @@
   flex: 2;
   width: 80px;
 }
-.container .cal .user-info > .left img {
+.container .cal .user-info >.left>img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -95,8 +95,8 @@
   <div class="container">
     <div class="cal">
       <div class="user-info">
-        <div class="avator left">
-          <img src="images/username.jpg">
+        <div class="left">
+            <img src="~/assets/images/avator.jpg">
         </div>
         <div class="right">
           <span>用户名：{{ userName }}</span>
@@ -266,7 +266,7 @@ export default {
       myChart.setOption(option)
     },
     getData(){
-        this.$axios.post('/admin/index/visitorData').then(res=>{
+        this.$axios.post('/user/getUserInfo').then(res=>{
             console.log(res);
         });
     }

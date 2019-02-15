@@ -19,4 +19,4 @@ let user=new Schema({
         default:Date.now
     }
 })
-mongoose.model('User',user);
+mongoose.model('user_info',user);
