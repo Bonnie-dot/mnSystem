@@ -12,7 +12,7 @@ exports.sign=(user)=>{
     return token;
 }
 exports.verify=(token)=>{
-    const decoded=jwt.verify(token,config.jwt.expiresIn);
+    const decoded=jwt.verify(token,config.jwt.secret);
     return decoded;
 }
 

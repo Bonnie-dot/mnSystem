@@ -71,7 +71,7 @@
 .container .echarts > div {
   flex: 1;
   border: 1px solid #ccc;
-  height: 500px;
+  height: 300px;
   margin-top: 20px;
   border-radius: 10px;
 }
@@ -90,6 +90,22 @@
 .dark-blue {
   background: #ff9900;
 }
+@media screen and (min-width: 1024px) and (max-width:1300px) {
+  .container .cal .user-info{
+    flex: 2;
+  }
+  .container .cal .cal-data > div > span{
+    width: 76px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-top: 0;
+  }
+  .container .cal .cal-data .detail-number > span{
+    font-size: 15px;
+  }
+}
 </style>
 <template>
   <div class="container">
@@ -99,15 +115,15 @@
             <img src="~/assets/images/avator.jpg">
         </div>
         <div class="right">
-          <span>用户名：{{ userName }}</span>
-          <span>最近登录时间：{{ loginTime }}</span>
-          <span>最近登录地点：{{ loginArea }}</span>
+          <span>用户名：{{ userInfo.username }}</span>
+          <span>最近登录时间：{{ userInfo.login_time}}</span>
+          <span>最近登录地点：{{ userInfo.login_area }}</span>
         </div>
       </div>
       <div class="cal-data">
         <div class="data">
           <span class="blue">
-            <Icon type="md-person-add" size="70" color="#fff"/>
+            <Icon type="md-person-add" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
             <span>{{ todayVisit }}</span>
@@ -116,7 +132,7 @@
         </div>
         <div class="data">
           <span class="light-blue">
-            <Icon type="ios-eye" size="70" color="#fff"/>
+            <Icon type="ios-eye" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
             <span>{{ historyVisit }}</span>
@@ -125,7 +141,7 @@
         </div>
         <div class="data">
           <span class="deep-blue">
-            <Icon type="ios-document" size="70" color="#fff"/>
+            <Icon type="ios-document" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
             <span>{{ recentltTime }}</span>
@@ -134,7 +150,7 @@
         </div>
         <div class="data">
           <span class="dark-blue">
-            <Icon type="ios-book" size="70" color="#fff"/>
+            <Icon type="ios-book" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
             <span>{{ articleTotal }}</span>
@@ -150,12 +166,15 @@
   </div>
 </template>
 <script>
+import { mapState,mapMutations  } from 'vuex'
 export default {
+  async asyncData({$axios,store}){
+    let res1=await $axios.post('/admin/user/getUserInfo');
+    store.commit('admin/setUser',res1.data.data);
+    return {userInfo:res1.data.data}
+  },
   data() {
     return {
-      userName: 'Bonnie',
-      loginTime: '2019-1-19 14:54',
-      loginArea: '四川成都高新区',
       todayVisit: 11,
       historyVisit: 300,
       recentltTime: '2019-1-19',
@@ -163,7 +182,6 @@ export default {
     }
   },
   mounted() {
-    this.getData();
     this.getVisitNumber();
     this.getArticleNumber();
   },
@@ -264,11 +282,6 @@ export default {
       }
       var myChart = this.$echarts.init(echart)
       myChart.setOption(option)
-    },
-    getData(){
-        this.$axios.post('/user/getUserInfo').then(res=>{
-            console.log(res);
-        });
     }
   }
 }

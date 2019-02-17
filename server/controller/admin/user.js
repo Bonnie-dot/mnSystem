@@ -17,7 +17,8 @@ exports.login=async(ctx,next)=>{
             success:true,
             data:{
                 msg:"登录成功",
-                token:token
+                token:token,
+                user:res
             }
         }
     }else{
@@ -34,8 +35,7 @@ exports.login=async(ctx,next)=>{
 *获取管理员信息
 */
 exports.getUserInfo=async(ctx,next)=>{
-    let username=ctx.req.body.username;
-    let res=await User.findOne({username:username}).exec();
+    let res=ctx.state.userInfo
     if(res){
         ctx.body={
             success:true,

@@ -90,11 +90,9 @@ export default {
           self.$axios.post('/admin/user/login',self.formInline).then(res=>{
            let {data,success}=res.data;
             if(success){
-              let ws=new WebStorageCache();
-              ws.set('token',data.token);
               self.$Message.success('登录成功');
               self.setToken(data.token);
-              self.setUser(self.formInline.username);
+              self.setUser(data.user);
               setTimeout(_=>{
                  self.$router.push('/admin')
               },1000);
