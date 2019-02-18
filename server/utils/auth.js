@@ -26,7 +26,8 @@ module.exports=_=>{
                 ctx.body={
                     success:false,
                     data:{
-                        msg:'invalid token'
+                        msg:'invalid token',
+                        code:401
                     }
                 }
             }
@@ -34,7 +35,8 @@ module.exports=_=>{
             ctx.body={
                 success:false,
                 data:{
-                    msg:err
+                    msg:err.message,
+                    code:401
                 }
             }
         }

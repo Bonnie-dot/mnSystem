@@ -11,7 +11,8 @@ const visitor=new Schema({
         type:String
     },
     visited_time:{
-        type:String
+        type:Date,
+        default:Date.now
     }
 })
 mongoose.model('Visitor',visitor);

@@ -1,5 +1,5 @@
 ## 使用技术
-> nuxt+iview+vue-router+koa+nodejs+mongoose+echart+vue-quill-editor
+> nuxt+iview+vue-router+vuex+koa+nodejs+mongoose+echart+vue-quill-editor+web-storage-cache+jsonwebtoken
 ## 目录结构
 ```
 ├─.nuxt
@@ -27,7 +27,7 @@
 └─store
 ```
 ## 目前进度
-目前完成基本前端框架的搭建，首页完成80%，其他功能待开发。
+目前完成h后台基本前端框架的搭建，登录接口调试成功，框架搭建完成70%，其他待开发。
 ## 用法
 
 ``` bash
@@ -43,6 +43,6 @@ $ npm start
 
 # generate static project
 $ npm run generate
-在浏览器中输入http://localhost:3000/home
+在浏览器中输入http://localhost:3000/admin
 ```
 

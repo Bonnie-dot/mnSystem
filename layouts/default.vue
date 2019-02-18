@@ -205,7 +205,7 @@ html {
             <BreadcrumbItem>Components</BreadcrumbItem>
             <BreadcrumbItem>Layout</BreadcrumbItem>
           </Breadcrumb>
-          <Content :style="{padding: '24px', background: '#fff',height:'538px',overflow:hidden}">
+          <Content :style="{padding: '24px', background: '#fff',height:'85vh'}">
             <nuxt/>
           </Content>
         </Layout>

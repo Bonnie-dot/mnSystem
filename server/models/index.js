@@ -12,6 +12,6 @@ db.once('open',async _=>{
    if(!admin){
        config.user.password=md5(config.user.password)
         let user=new User(config.user)
-        let res=await user.save();
+        await user.save();
    }
 });

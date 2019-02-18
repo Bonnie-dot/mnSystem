@@ -1,4 +1,4 @@
-import iview from 'iview'
+import {Message} from 'iview'
 import WebStorageCache from 'web-storage-cache'
 const wsCache=new WebStorageCache()
 export default function ({ $axios, redirect }) {
@@ -10,7 +10,10 @@ export default function ({ $axios, redirect }) {
     $axios.onResponse(config => {//将错误统一抛出
         let {success,data}=config.data;
         if(!success){
-            iView.$Message.error(data.msg);
+           Message.error(data.msg)
+           if(data.code==401){
+              redirect('/admin/login');
+           }
         }
       })
     $axios.onError(error => {

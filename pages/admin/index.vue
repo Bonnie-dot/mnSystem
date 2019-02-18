@@ -71,8 +71,8 @@
 .container .echarts > div {
   flex: 1;
   border: 1px solid #ccc;
-  height: 300px;
-  margin-top: 20px;
+  height: 500px;
+  margin-top: 40px;
   border-radius: 10px;
 }
 .container .echarts > div:first-child {
@@ -116,7 +116,7 @@
         </div>
         <div class="right">
           <span>用户名：{{ userInfo.username }}</span>
-          <span>最近登录时间：{{ userInfo.login_time}}</span>
+          <span>最近登录时间：{{ userInfo.login_time|forMateData}}</span>
           <span>最近登录地点：{{ userInfo.login_area }}</span>
         </div>
       </div>
@@ -126,7 +126,7 @@
             <Icon type="md-person-add" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
-            <span>{{ todayVisit }}</span>
+            <span>{{ visit.currentNumber }}</span>
             <span>今日访问量</span>
           </div>
         </div>
@@ -135,8 +135,8 @@
             <Icon type="ios-eye" size="40" color="#fff"/>
           </span>
           <div class="detail-number">
-            <span>{{ historyVisit }}</span>
-            <span>历史访问量</span>
+            <span>{{ visit.totalNumber }}</span>
+            <span>访问总量</span>
           </div>
         </div>
         <div class="data">
@@ -169,9 +169,12 @@
 import { mapState,mapMutations  } from 'vuex'
 export default {
   async asyncData({$axios,store}){
-    let res1=await $axios.post('/admin/user/getUserInfo');
+    let [res1,res2]=await Promise.all([
+         $axios.post('/admin/user/getUserInfo'),
+         $axios.get('/admin/visitor/queryVisitorNumber')
+    ]);
     store.commit('admin/setUser',res1.data.data);
-    return {userInfo:res1.data.data}
+    return {userInfo:res1.data.data,visit:res2.data.data};
   },
   data() {
     return {
@@ -184,6 +187,12 @@ export default {
   mounted() {
     this.getVisitNumber();
     this.getArticleNumber();
+  },
+  filters:{
+    forMateData(d){
+      var d=new Date(d);
+      return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes();
+    }
   },
   methods: {
     getVisitNumber() {
