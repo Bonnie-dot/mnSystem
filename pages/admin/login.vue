@@ -84,6 +84,11 @@ export default {
     ...mapMutations('admin',['setUser','setToken']),
     handleSubmit(name) {
       var self=this;
+      navigator.geolocation.getCurrentPosition(position=>{
+        debugger
+      },err=>{
+        console.log(err);
+      });
       self.$refs[name].validate(valid => {
         if (valid) {
           self.formInline.password=md5(self.formInline.password);
@@ -104,7 +109,7 @@ export default {
           self.$Message.error("请填写完整信息!");
         }
       });
-    }
+    },
   }
 };
 </script>
