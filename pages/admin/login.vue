@@ -88,7 +88,7 @@ export default {
         if (valid) {
           self.formInline.password=md5(self.formInline.password);
           self.$axios.post('/admin/user/login',self.formInline).then(res=>{
-           let {data,success}=res.data;
+           let {data,success}=res;
             if(success){
               self.$Message.success('登录成功');
               self.setToken(data.token);

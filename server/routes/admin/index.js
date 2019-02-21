@@ -1,6 +1,8 @@
 const router=require('koa-router')()
 const user=require('./user')
 const visitor=require('./visitor')
+const tag=require('./tag')
 router.use('/user',user)
 router.use('/visitor',visitor)
+router.use('/tag',tag)
 module.exports=router.routes()

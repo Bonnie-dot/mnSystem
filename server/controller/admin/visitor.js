@@ -67,17 +67,41 @@ exports.insertVisitor = async (ctx, next) => {
 * @des 访客人数列表 按当前年月份返回
 */
 exports.queryNumberList = async (ctx, next) => {
-    //拿到当前年 按月显示列表
-    let time = tools.getCurrentYearBoundary();
-    //let res=await Visitor.find({visited_time:{$gte:time.startTime,$lte:time.endTime}})
-    let res = await Visitor.aggregate([
-        { $match: { visited_time: { $gt: new Date(time.startTime), $lt: new Date(time.endTime) } } },// 限制日期当年
-        {
-            $group: {
-                _id:'$visited_time',
-                _id:{month:{$month:new Date('$visited_time')}},// 按月统计数量
-                count:{$sum:1}
-             },
-        }]).exec()
-    console.log(res)
+    try {
+        let time = tools.getCurrentYearBoundary();
+        let res = await Visitor.aggregate([
+            { $match: { visited_time: { $gte: new Date(time.startTime), $lte: new Date(time.endTime) } } },// 限制日期当年
+            {
+                $group: {
+                    _id: {$month: '$visited_time'},// 按月统计
+                    count: { $sum: 1 }// 数量累加
+                },
+            },
+            { $sort : { _id : 1} },// 按照id排序
+        ]).exec();
+        var resObj = {
+            time: [],
+            data: []
+        };
+        res.forEach(v => {
+            resObj.time.push(v._id + '月');
+            resObj.data.push(v.count);
+        });
+        ctx.body = {
+            success: true,
+            code: 200,
+            data: {
+                res: resObj
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            code: 500,
+            data: {
+                msg: err
+            }
+        }
+    }
+
 }

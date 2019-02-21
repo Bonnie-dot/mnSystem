@@ -15,6 +15,7 @@ export default function ({ $axios, redirect }) {
               redirect('/admin/login');
            }
         }
+        return config.data;
       })
     $axios.onError(error => {
         let code=error.response.status;

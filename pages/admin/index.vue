@@ -171,16 +171,14 @@
 import { mapState,mapMutations  } from 'vuex'
 export default {
   async asyncData({$axios,store}){
-    let [res2]=await Promise.all([
+    let [res1,res2]=await Promise.all([
         $axios.get('/admin/visitor/queryNumberListGroupByMonth'),
-        //  $axios.get('/admin/visitor/queryVisitorNumber')
+         $axios.get('/admin/visitor/queryVisitorNumber')
     ]);
-    return {visit:res2.data.data};
+    return {visitDate:res1.data.res,visit:res2.data};
   },
   data() {
     return {
-      todayVisit: 11,
-      historyVisit: 300,
       recentltTime: '2019-1-19',
       articleTotal: 200,
     }
@@ -214,14 +212,14 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data:this.visitDate.time
         },
         yAxis: {
           type: 'value'
         },
         series: [
           {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            data: this.visitDate.data,
             type: 'line',
             areaStyle: {
               color: '#5cadff'

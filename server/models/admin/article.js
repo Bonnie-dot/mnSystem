@@ -12,7 +12,7 @@ let article=new Schema({
     },
     create_date:{
         type:Date,
-        default:new ISODate(Date.now)
+        default:Date.now()
     }
 })
 mongoose.model('article',article);
