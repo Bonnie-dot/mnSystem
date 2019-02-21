@@ -5,21 +5,21 @@
       :key="item.id"
       :name="item.tag_name"
       closable
-      @on-close="handleClose2"
+      @on-close="removeData(item._id)"
     >{{item.tag_name}}</Tag>
     <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加标签</Button>
   </div>
 </template>
 <script>
 export default {
- async asyncData({$axios}){
-   let res=await $axios.get('/admin/tag/queryTags');
-     return {list:res.data.res };
-  },
   data() {
     return {
-      tagName: ""
+      tagName: "",
+      list:[]
     };
+  },
+  created(){
+    this.getData();
   },
   methods: {
     handleAdd() {
@@ -43,14 +43,23 @@ export default {
             if(res.success){
                this.$Message.success('添加标签成功');
                this.tagName="";
+               this.getData();
             }
           });
         }
       });
     },
-    handleClose2(event, name) {
-      const index = this.count.indexOf(name);
-      this.count.splice(index, 1);
+    removeData(id) {
+      this.$axios.post('/admin/tag/deleteTagById',{id:id}).then(res=>{
+        this.$Message.success(res.data.msg);
+        this.getData();
+      })
+    },
+    getData(){
+      this.list=[];
+      this.$axios.get('/admin/tag/queryTags').then(res=>{
+        this.list=res.data.res;
+      });
     }
   }
 };

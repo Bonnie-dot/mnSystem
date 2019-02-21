@@ -5,7 +5,7 @@
   border-radius: 50%;
   position: absolute;
   top:10%;
-  right: 4%;
+  right: 6%;
 }
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',

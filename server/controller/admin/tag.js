@@ -49,12 +49,36 @@ exports.insertTagData=async(ctx,next)=>{
 exports.queryTags=async (ctx,next)=>{
     try {
         let res=await Tag.find().exec();
-        if(res.length>0){
+        ctx.body = {
+            success: true,
+            code:200,
+            data: {
+                res: res
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            code:500,
+            data: {
+                msg: error,
+            }
+        }
+    }
+}
+/**
+* @func 
+* @des 删除标签
+*/
+exports.deleteTag=async(ctx,next)=>{
+    try {
+        let res=await Tag.findOneAndDelete({_id:ctx.request.body.id}).exec()
+        if(res){
             ctx.body = {
                 success: true,
                 code:200,
                 data: {
-                    res: res
+                    msg:'删除标签成功'
                 }
             }
         }else{
@@ -62,10 +86,11 @@ exports.queryTags=async (ctx,next)=>{
                 success: false,
                 code:500,
                 data: {
-                    msg: '当前没有标签数据',
+                    msg:'删除标签失败,不存在这个标签'
                 }
             }
         }
+        
     } catch (error) {
         ctx.body = {
             success: false,
