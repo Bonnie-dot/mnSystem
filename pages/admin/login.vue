@@ -49,7 +49,6 @@ html,body,.container,#__nuxt,#__layout{
 <script>
 import md5 from "md5"
 import { mapState,mapMutations  } from 'vuex'
-import WebStorageCache from 'web-storage-cache'
 export default {
   layout: "login",
   data() {

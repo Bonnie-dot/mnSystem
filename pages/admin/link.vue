@@ -69,6 +69,7 @@ export default {
         if (valid) {
           this.$axios.post('/admin/link/insertLink',this.formValidate).then(res=>{
             this.$Message.success(res.data.msg);
+            this.$refs[name].resetFields();
             this.modal=false;
             this.getData();
           })
@@ -77,6 +78,7 @@ export default {
     },
     handleReset(name) {
       this.$refs[name].resetFields();
+       this.modal=false;
     },
     getData() {
       this.list = [];

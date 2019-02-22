@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 const auth = require('../../utils/token');
 require('../../models/admin/user')
 const User = mongoose.model('user_info')
+const path = require('path')
 /**
 * @func
 * @des 用户登录
 */
 exports.login = async (ctx, next) => {
+    console.log(ctx.request.body)
     try {
         const {
             username,
@@ -19,7 +21,7 @@ exports.login = async (ctx, next) => {
             this.updateLoginInfoByID(res);
             ctx.body = {
                 success: true,
-                code:200,
+                code: 200,
                 data: {
                     msg: "登录成功",
                     token: token,
@@ -53,8 +55,9 @@ exports.login = async (ctx, next) => {
 * @des 获取管理员信息
 */
 exports.getUserInfo = async (ctx, next) => {
-    try{
+    try {
         let res = ctx.state.userInfo
+        res.avator = ctx.origin + '/img/' + res.avator
         if (res) {
             ctx.body = {
                 success: true,
@@ -68,10 +71,10 @@ exports.getUserInfo = async (ctx, next) => {
                 data: {
                     msg: "没有查到相关信息"
                 }
-    
+
             }
         }
-    }catch(err){
+    } catch (err) {
         ctx.body = {
             success: false,
             code: 500,
@@ -81,7 +84,7 @@ exports.getUserInfo = async (ctx, next) => {
 
         }
     }
-   
+
 }
 /**
 * @func  
@@ -89,5 +92,32 @@ exports.getUserInfo = async (ctx, next) => {
 * @param {object} user 用户信息
 */
 exports.updateLoginInfoByID = async (user) => {
-     await User.where({ _id: user._id }).updateOne({ last_login_time: user.login_time, login_time: Date.now() });
+    await User.where({ _id: user._id }).updateOne({ last_login_time: user.login_time, login_time: Date.now() });
+}
+/**
+* @func
+* @des 上传头像
+*/
+exports.uploadImg = async ctx => {
+    try {
+        var imgPath = ctx.request.files.file.path
+        let idx = imgPath.indexOf('public')
+        let str = path.join(imgPath.slice(idx))
+        ctx.body = {
+            success: true,
+            code: 200,
+            data: str
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            code: 500,
+            data: {
+                msg: err
+            }
+
+        }
+    }
+
+
 }

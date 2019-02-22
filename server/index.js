@@ -1,23 +1,41 @@
 const Koa = require('koa')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
-const router=require('koa-router')()
-const path=require('path')
-const bodyParser=require('koa-bodyparser')
+const router = require('koa-router')()
+const path = require('path')
+const koaBody = require('koa-body')
 const session = require('koa-session')
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-const admin=require('./routes/admin')
-const db=require('./models')
-const server=require('koa-static')
+const admin = require('./routes/admin')
+const db = require('./models')
+const server = require('koa-static')
+const fs=require('fs')
+let uploadUrl=path.join(__dirname,'/public/upload')
 //session
 app.keys = ['some secret hurr']
 app.use(session({}, app));
-//body-parseer
-app.use(bodyParser());
+//koa-body 参数
+app.use(koaBody({
+  multipart:true,
+  maxFieldsSize:10*1024*1024,
+  formidable: {
+    uploadDir:uploadUrl,
+    keepExtensions: true,// 保持扩展名
+    onFileBegin:(name,file) => { // 文件上传前的设置 删除之前的头像
+      
+      fs.readdir(uploadUrl,(err,files)=>{
+        files.forEach(filename=>{
+          let curpath=path.join(uploadUrl,filename);
+          fs.unlinkSync(curpath)
+        })
+      })
+    }
+  }
+}));
 //静态资源
-app.use(server(path.join(__dirname,'./public')));
+app.use(server(path.join(__dirname, './public')));
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')
@@ -31,7 +49,7 @@ async function start() {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-  router.use('/admin',admin);
+  router.use('/admin', admin);
   app.use(router.routes()).use(router.allowedMethods());
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
