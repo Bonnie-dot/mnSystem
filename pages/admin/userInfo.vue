@@ -25,9 +25,9 @@
   width: 30%;
   margin-top: 30px;
 }
-.row button {
+.row .btn {
   height: 40px;
-  line-height: 33px;
+  line-height: 40px;
 }
 .avators {
   margin-top: 70px;
@@ -70,6 +70,21 @@
 .password > span:first-child {
   margin-right: 70px;
 }
+.btn{
+  background: #2d8cf0;
+  color: #fff;
+  border:none;
+  border-radius: 5px;
+}
+.file{
+  height: 40px;
+  position: absolute;
+  width: 100px;
+  top: -88%;
+  right: -5%;
+  opacity: 0;
+  z-index: 666;
+}
 </style>
 
 <template>
@@ -80,9 +95,10 @@
         <span>用户头像：
           <img :src="userInfo.avator" class="av-img">
         </span>
-        <Upload action="/admin/user/uploadImg" :headers="header" :accept="accept" :on-success="uploadSuccess">
-          <Button type="primary">修改头像</Button>
-        </Upload>
+        <button type="button" class="btn">
+          重新上传
+        </button>
+         <input type="file" class="file" :accept="accept" @change="uploadImg">
       </div>
       <div class="username row">
         <span>用户名：
@@ -120,8 +136,24 @@ export default {
   created(){
     this.header['x-access-token']=this.token;
   },
-  uploadSuccess(response,file,){
+  methods:{
+    uploadSuccess(response,file,){
     debugger
+  },
+  uploadImg(e){
+    let file=e.target.files[0];
+    var limit=file.size/1024;
+    if(limit>100){
+       this.$Message.warning('图片大小不能超过100M');
+       return;
+    }
+    let param=new FormData()
+    param.append('file',file);
+    this.$axios.post('/admin/user/uploadImg',param).then(res=>{
+      this.userInfo.avator=res.data;
+    })
+    
+  }
   }
 };
 </script>

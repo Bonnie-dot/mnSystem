@@ -8,7 +8,6 @@ const path = require('path')
 * @des 用户登录
 */
 exports.login = async (ctx, next) => {
-    console.log(ctx.request.body)
     try {
         const {
             username,
@@ -101,8 +100,10 @@ exports.updateLoginInfoByID = async (user) => {
 exports.uploadImg = async ctx => {
     try {
         var imgPath = ctx.request.files.file.path
-        let idx = imgPath.indexOf('public')
-        let str = path.join(imgPath.slice(idx))
+        let idx = imgPath.indexOf('/upload')
+        //********************更新数据库头像*******************************/
+        // let str = path.join(ctx.origin,path.join(imgPath.slice(idx)))
+        let str=ctx.origin+imgPath.slice(idx);
         ctx.body = {
             success: true,
             code: 200,
@@ -118,6 +119,4 @@ exports.uploadImg = async ctx => {
 
         }
     }
-
-
 }

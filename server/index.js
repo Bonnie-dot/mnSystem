@@ -19,7 +19,7 @@ app.use(session({}, app));
 //koa-body 参数
 app.use(koaBody({
   multipart:true,
-  maxFieldsSize:10*1024*1024,
+  maxFieldsSize:10*1024,
   formidable: {
     uploadDir:uploadUrl,
     keepExtensions: true,// 保持扩展名
