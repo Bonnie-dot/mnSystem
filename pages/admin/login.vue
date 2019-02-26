@@ -1,9 +1,9 @@
 <style>
-html,body,.container,#__nuxt,#__layout{
+html,body,.box,#__nuxt,#__layout{
     width: 100%;
     height: 100%;
 }
-.container{
+.box{
     background: url(~assets/images/bg.jpg) no-repeat;
     background-size: cover;
 }
@@ -19,7 +19,7 @@ html,body,.container,#__nuxt,#__layout{
 .form:hover{
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.15);
 }
-.container h1{
+.box h1{
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
     text-align: center;
     padding-top: 80px;
@@ -27,7 +27,7 @@ html,body,.container,#__nuxt,#__layout{
 </style>
 
 <template>
-  <div class="container">
+  <div class="box">
       <h1>个人博客后台管理系统</h1>
     <Form ref="formInline" :model="formInline" :rules="ruleInline" class="form">
       <FormItem prop="username">

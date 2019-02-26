@@ -1,15 +1,15 @@
 <style>
-.avator img{
-  width:50px;
-  height:50px;
+.avator img {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   position: absolute;
-  top:10%;
+  top: 10%;
   right: 6%;
 }
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -115,12 +115,12 @@ html {
 .ivu-layout-sider a {
   color: #fff;
 }
-.link{
+.link {
   width: 80%;
   height: 100%;
   display: inline-block;
 }
-.ivu-layout-sider{
+.ivu-layout-sider {
   position: absolute !important;
 }
 </style>
@@ -131,21 +131,21 @@ html {
       <Header>
         <Menu mode="horizontal" theme="dark" active-name="1">
           <div class="header">
-            <div class="layout-logo">这是网站的标题</div>
+            <div class="layout-logo">不积跬步，无以至千里</div>
             <div class="user">
-              <Dropdown  @on-click="changeOper">
+              <Dropdown @on-click="changeOper">
                 <a href="javascript:void(0)">
                   {{user.username }}
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
-                <DropdownMenu slot="list"    trigger="hover">
+                <DropdownMenu slot="list" trigger="hover">
                   <DropdownItem name="mdf">修改密码</DropdownItem>
                   <DropdownItem name="logout">退出登录</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <div class="avator">
                 <img :src="user.avator">
-            </div>
+              </div>
             </div>
           </div>
         </Menu>
@@ -156,12 +156,12 @@ html {
           breakpoint="md"
         >
           <Menu :open-names="['1']" active-name="1" theme="dark" width="auto">
-            <MenuItem name="1">
-              <Icon type="md-home"></Icon>
-              <nuxt-link to="/admin" class="link">
+            <nuxt-link to="/admin" class="link">
+              <MenuItem name="1">
+                <Icon type="md-home"></Icon>
                 <span>首页</span>
-              </nuxt-link>
-            </MenuItem>
+              </MenuItem>
+            </nuxt-link>
             <Submenu name="2">
               <template slot="title">
                 <Icon type="ios-list-box"></Icon>文章管理
@@ -214,60 +214,66 @@ html {
   </div>
 </template>
 <script>
-import webStorageCache from 'web-storage-cache'
-const ws=new webStorageCache()
-import md5 from 'md5'
-import {mapState} from 'vuex'
+import webStorageCache from "web-storage-cache";
+const ws = new webStorageCache();
+import md5 from "md5";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-      password:""
+      password: ""
+    };
+  },
+  computed: mapState("admin", {
+    user: state => state.user
+  }),
+  created() {
+    if (!ws.get("token")) {
+      //核查是否登录
+      this.$router.push("/admin/login");
     }
   },
-  computed:mapState('admin',{
-    user:state=>state.user
-  }),
-  created(){
-   if(!ws.get('token')){//核查是否登录
-         this.$router.push('/admin/login')
-      }
-  },
-  methods:{
-    logout(){
-      this.$router.push('/admin/login')
+  methods: {
+    logout() {
+      this.$router.push("/admin/login");
     },
-    changeOper(val){
-      var self=this;
-      if(val=="mdf"){
-            self.$Modal.confirm({
-        render: h => {
-          return h("Input", {
-            props: {
-              value: self.value,
-              autofocus: true,
-              placeholder:"请输入你的密码"
-            },
-            on: {
-              input: val => {
-                self.password = val;
+    changeOper(val) {
+      var self = this;
+      if (val == "mdf") {
+        self.$Modal.confirm({
+          render: h => {
+            return h("Input", {
+              props: {
+                value: self.value,
+                autofocus: true,
+                placeholder: "请输入你的密码"
+              },
+              on: {
+                input: val => {
+                  self.password = val;
+                }
               }
-            }
-          });
-        },
-        onOk(){
-         self.$axios.post('/admin/user/updateUserPassword',{userId:self.user._id,passWord:md5(self.password)}).then(res=>{
-              if(res.success){
-                self.$Message.success('修改密码成功');
-                 self.$router.push('/admin/login')
-              }
-         })
-        }
-      });
-      }else{
-        this.$router.push('/admin/login')
+            });
+          },
+          onOk() {
+            self.$axios
+              .post("/admin/user/updateUserPassword", {
+                userId: self.user._id,
+                passWord: md5(self.password)
+              })
+              .then(res => {
+                if (res.success) {
+                  self.$Message.success("修改密码成功");
+                  self.$router.push("/admin/login");
+                }
+              });
+          }
+        });
+      } else {
+        this.$router.push("/admin/login");
       }
     }
   }
-}
+};
 </script>
 
