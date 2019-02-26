@@ -7,7 +7,8 @@ exports.sign=(user)=>{
     }=config.jwt;
     const token=jwt.sign({
         username:user.username,
-        userid:user._id
+        userid:user._id,
+        password:user.password,
     },secret,{expiresIn:expiresIn});
     return token;
 }

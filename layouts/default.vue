@@ -133,14 +133,14 @@ html {
           <div class="header">
             <div class="layout-logo">这是网站的标题</div>
             <div class="user">
-              <Dropdown>
+              <Dropdown  @on-click="changeOper">
                 <a href="javascript:void(0)">
                   {{user.username }}
                   <Icon type="ios-arrow-down"></Icon>
                 </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem>修改密码</DropdownItem>
-                  <DropdownItem>退出登录</DropdownItem>
+                <DropdownMenu slot="list"    trigger="hover">
+                  <DropdownItem name="mdf">修改密码</DropdownItem>
+                  <DropdownItem name="logout">退出登录</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <div class="avator">
@@ -215,11 +215,13 @@ html {
 </template>
 <script>
 import webStorageCache from 'web-storage-cache'
-const ws=new webStorageCache();
+const ws=new webStorageCache()
+import md5 from 'md5'
 import {mapState} from 'vuex'
 export default {
   data() {
     return {
+      password:""
     }
   },
   computed:mapState('admin',{
@@ -229,6 +231,42 @@ export default {
    if(!ws.get('token')){//核查是否登录
          this.$router.push('/admin/login')
       }
+  },
+  methods:{
+    logout(){
+      this.$router.push('/admin/login')
+    },
+    changeOper(val){
+      var self=this;
+      if(val=="mdf"){
+            self.$Modal.confirm({
+        render: h => {
+          return h("Input", {
+            props: {
+              value: self.value,
+              autofocus: true,
+              placeholder:"请输入你的密码"
+            },
+            on: {
+              input: val => {
+                self.password = val;
+              }
+            }
+          });
+        },
+        onOk(){
+         self.$axios.post('/admin/user/updateUserPassword',{userId:self.user._id,passWord:md5(self.password)}).then(res=>{
+              if(res.success){
+                self.$Message.success('修改密码成功');
+                 self.$router.push('/admin/login')
+              }
+         })
+        }
+      });
+      }else{
+        this.$router.push('/admin/login')
+      }
+    }
   }
 }
 </script>

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const auth = require('../../utils/token');
 require('../../models/admin/user')
 const User = mongoose.model('user_info')
-const path = require('path')
+const url = require('url')
 /**
 * @func
 * @des 用户登录
@@ -16,7 +16,6 @@ exports.login = async (ctx, next) => {
         let res = await User.findOne({ username: username, password: password }).exec()
         if (res) {
             let token = auth.sign(res)
-            res.avator = ctx.origin + '/img/' + res.avator
             this.updateLoginInfoByID(res);
             ctx.body = {
                 success: true,
@@ -55,8 +54,7 @@ exports.login = async (ctx, next) => {
 */
 exports.getUserInfo = async (ctx, next) => {
     try {
-        let res = ctx.state.userInfo
-        res.avator = ctx.origin + '/img/' + res.avator
+        let res =await User.findOne(ctx.request.body).exec()
         if (res) {
             ctx.body = {
                 success: true,
@@ -100,14 +98,91 @@ exports.updateLoginInfoByID = async (user) => {
 exports.uploadImg = async ctx => {
     try {
         var imgPath = ctx.request.files.file.path
-        let idx = imgPath.indexOf('/upload')
-        //********************更新数据库头像*******************************/
-        // let str = path.join(ctx.origin,path.join(imgPath.slice(idx)))
-        let str=ctx.origin+imgPath.slice(idx);
+        let idx = imgPath.indexOf('upload')
+        let res=await User.findOneAndUpdate({_id:ctx.request.body.userId},{avator:url.resolve(ctx.origin,imgPath.slice(idx-1))},{new:true}).exec();
+        if(res){
+            ctx.body = {
+                success: true,
+                code: 200,
+                data: res
+            }
+        }else{
+            ctx.body = {
+                success: false,
+                code: 500,
+                data: {
+                    msg: '更新失败'
+                }
+            }
+        }
+        
+    } catch (error) {
         ctx.body = {
-            success: true,
-            code: 200,
-            data: str
+            success: false,
+            code: 500,
+            data: {
+                msg: err
+            }
+
+        }
+    }
+}
+/**
+* @func 
+* @des 更新用户姓名通过id 
+*/
+exports.updateUserNameById=async ctx=>{
+    try {
+        let param=ctx.request.body
+        let res=await User.findOneAndUpdate({_id:param.userId},{username:param.userName},{new:true}).exec();
+        if(res){
+            ctx.body = {
+                success: true,
+                code: 200,
+                data: res
+            }
+        }else{
+            ctx.body = {
+                success: false,
+                code: 500,
+                data: {
+                    msg: '更新失败'
+                }
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            code: 500,
+            data: {
+                msg: err
+            }
+
+        }
+    }
+}
+/**
+* @func 
+* @des 更新用户密码通过id 
+*/
+exports.updateUserPassWordById=async ctx=>{
+    try {
+        let param=ctx.request.body
+        let res=await User.findOneAndUpdate({_id:param.userId},{password:param.passWord},{new:true}).exec();
+        if(res){
+            ctx.body = {
+                success: true,
+                code: 200,
+                data: res
+            }
+        }else{
+            ctx.body = {
+                success: false,
+                code: 500,
+                data: {
+                    msg: '更新失败'
+                }
+            }
         }
     } catch (error) {
         ctx.body = {

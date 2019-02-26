@@ -4,7 +4,6 @@ const { Nuxt, Builder } = require('nuxt')
 const router = require('koa-router')()
 const path = require('path')
 const koaBody = require('koa-body')
-const session = require('koa-session')
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
@@ -13,9 +12,6 @@ const db = require('./models')
 const server = require('koa-static')
 const fs=require('fs')
 let uploadUrl=path.join(__dirname,'/public/upload')
-//session
-app.keys = ['some secret hurr']
-app.use(session({}, app));
 //koa-body 参数
 app.use(koaBody({
   multipart:true,

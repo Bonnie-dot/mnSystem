@@ -70,13 +70,13 @@
 .password > span:first-child {
   margin-right: 70px;
 }
-.btn{
+.btn {
   background: #2d8cf0;
   color: #fff;
-  border:none;
+  border: none;
   border-radius: 5px;
 }
-.file{
+.file {
   height: 40px;
   position: absolute;
   width: 100px;
@@ -92,68 +92,110 @@
     <p class="title">个人信息修改</p>
     <div class="info">
       <div class="avators row">
-        <span>用户头像：
+        <span>
+          用户头像：
           <img :src="userInfo.avator" class="av-img">
         </span>
-        <button type="button" class="btn">
-          重新上传
-        </button>
-         <input type="file" class="file" :accept="accept" @change="uploadImg">
+        <button type="button" class="btn">重新上传</button>
+        <input type="file" class="file" :accept="accept" @change="uploadImg">
       </div>
       <div class="username row">
-        <span>用户名：
-          <span>{{userInfo.name}}</span>
+        <span>
+          用户名：
+          <span>{{userInfo.username}}</span>
         </span>
-        <Button type="primary">修改用户名</Button>
+        <Button type="primary" @click="changeInfo('userName')">修改用户名</Button>
       </div>
       <div class="password row">
-        <span>密码：
-          <span>{{userInfo.password.replace(/./g,'*')}}</span>
+        <span>
+          密码：
+          <span>{{userInfo.password&&userInfo.password.replace(/./g,'*')}}</span>
         </span>
-        <Button type="primary">修改密码</Button>
+        <Button type="primary" @click="changeInfo('password')">修改密码</Button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState,mapMutations  } from 'vuex'
+import { mapState, mapMutations } from "vuex";
+import md5 from 'md5';
 export default {
-  async asyncData({ $axios }) {
-    let res = await $axios.post("/admin/user/getUserInfo");
-    return { userInfo: res.data };
-  },
-  data(){
-    return{
-      header:{
-        'x-access-token':""
+  data() {
+    return {
+      header: {
+        "x-access-token": ""
       },
-      accept:".jpg,.jpeg,.gif,.png,.bmp"
-    }
+      accept: ".jpg,.jpeg,.gif,.png,.bmp",
+      userInfo: {},
+      userName:"",
+      password:""
+    };
   },
-   computed: mapState('admin',{
-      token:state => state.token,
+  computed: mapState("admin", {
+    token: state => state.token,
+    user: state => state.user
   }),
-  created(){
-    this.header['x-access-token']=this.token;
+  created() {
+    this.getData();
   },
-  methods:{
-    uploadSuccess(response,file,){
-    debugger
-  },
-  uploadImg(e){
-    let file=e.target.files[0];
-    var limit=file.size/1024;
-    if(limit>100){
-       this.$Message.warning('图片大小不能超过100M');
-       return;
+  methods: {
+    ...mapMutations("admin", ["setUser"]),
+    uploadImg(e) {
+      let file = e.target.files[0];
+      var limit = file.size / 1024;
+      if (limit > 100) {
+        this.$Message.warning("图片大小不能超过100M");
+        return;
+      }
+      let param = new FormData();
+      param.append("file", file);
+      param.append("userId", this.user._id);
+      this.$axios.post("/admin/user/uploadImg", param).then(res => {
+        this.setUser(res.data);
+        this.getData();
+      });
+    },
+    getData() {
+      let self = this;
+      this.$axios
+        .post("/admin/user/getUserInfo", { _id: this.user._id })
+        .then(function(res) {
+          self.userInfo = res.data;
+        });
+    },
+    changeInfo(dre) {
+      var self=this;
+      self.$Modal.confirm({
+        render: h => {
+          return h("Input", {
+            props: {
+              value: self.value,
+              autofocus: true,
+              placeholder: dre=="password"?"请输入你的密码":"请输入你的用户名"
+            },
+            on: {
+              input: val => {
+                
+                self[dre] = val;
+              }
+            }
+          });
+        },
+        onOk(){
+          let param={},url="";
+          if(dre=="password" ){
+            url='/admin/user/updateUserPassword';
+            param={userId:self.user._id,passWord:md5(self.password)};
+          }else{
+            url='/admin/user/updateUserName';
+            param={userId:self.user._id,userName:self.userName};
+          }
+         self.$axios.post(url,param).then(res=>{
+              self.getData();
+         })
+        }
+      });
     }
-    let param=new FormData()
-    param.append('file',file);
-    this.$axios.post('/admin/user/uploadImg',param).then(res=>{
-      this.userInfo.avator=res.data;
-    })
-    
-  }
   }
 };
 </script>

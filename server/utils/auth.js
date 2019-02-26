@@ -16,17 +16,18 @@ module.exports=_=>{
         try{
             const {
                 username,
-                userid
+                userid,
+                password
             }=token.verify(t)//验证token
-            let res=await User.findOne({username:username}).exec()
-            if(res&&username&&userid){
-                ctx.state.userInfo=res;
+            let res1=await User.findOne({username:username}).exec()
+            let res2=await User.findOne({password:password}).exec()
+            if(res1&&username&&userid,password&&res2){
                await next();
             }else{
                 ctx.body={
                     success:false,
                     data:{
-                        msg:'invalid token',
+                        msg:'无效token,请重新登录',
                         code:401
                     }
                 }
