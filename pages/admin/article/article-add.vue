@@ -35,7 +35,7 @@
 <template>
   <div class="container">
     <div class="title">
-      <Input v-model="value" placeholder="请输入标题" style="width: 100%" size="large"/>
+      <Input v-model="title" placeholder="请输入标题" style="width: 100%" size="large"/>
     </div>
     <div class="content">
       <div
@@ -49,17 +49,28 @@
       ></div>
     </div>
     <div class="tag">标签：
-      <Select v-model="model10" multiple style="width:260px">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      <Select v-model="tagId" multiple style="width:260px">
+        <Option v-for="item in tagList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </div>
     <div class="submit-btn">
-      <Button type="primary" width="200px" size="large" html-type="submit">提交</Button>
+      <Button type="primary" width="200px" size="large" html-type="submit" @click="submitData">提交</Button>
     </div>
   </div>
 </template>
 <script>
 export default {
+  async asyncData({$axios}){
+    let res=await $axios.get('/admin/tag/queryTags')
+    let tagList=[];
+    res.data.res.forEach(v => {
+      tagList.push({
+        value:v._id,
+        label:v.tag_name
+      })
+    });
+    return {tagList}
+  },
   data() {
     return {
       content: '<p>I am Example</p>',
@@ -84,38 +95,11 @@ export default {
           ]
         }
       },
-      value: '',
-      cityList: [
-        {
-          value: 'New York',
-          label: 'New York'
-        },
-        {
-          value: 'London',
-          label: 'London'
-        },
-        {
-          value: 'Sydney',
-          label: 'Sydney'
-        },
-        {
-          value: 'Ottawa',
-          label: 'Ottawa'
-        },
-        {
-          value: 'Paris',
-          label: 'Paris'
-        },
-        {
-          value: 'Canberra',
-          label: 'Canberra'
-        }
-      ],
-      model10: []
+      title: '',
+      tagId: []
     }
   },
   mounted() {
-    console.log('app init, my quill insrance object is:', this.myQuillEditor)
     setTimeout(() => {
       this.content = 'i am changed'
     }, 3000)
@@ -131,8 +115,21 @@ export default {
       console.log('editor ready!', editor)
     },
     onEditorChange({ editor, html, text }) {
-      console.log('editor change!', editor, html, text)
+      // console.log('editor change!', editor, html, text)
       this.content = html
+    },
+    submitData(){
+        if(!this.title){
+          this.$Message.warning('请填写title');
+          return;
+        }
+        if(!this.content){
+          this.$Message.warning('请填写内容');
+          return;
+        }
+        this.$axios.post('/admin/article/insertArticleData',{title:this.title,content:this.content,tag:this.tagId}).then(res=>{
+
+        })
     }
   }
 }

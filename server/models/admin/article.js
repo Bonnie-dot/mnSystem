@@ -1,14 +1,14 @@
 const mongoose =require('mongoose')
 const Schema=mongoose.Schema;
 let article=new Schema({
-    tittle:{
+    title:{
         type:String
     },
     content:{
         type:String
     },
     tag:{
-        type:String
+        type:[String]
     },
     create_date:{
         type:Date,
