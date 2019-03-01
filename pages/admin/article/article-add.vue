@@ -41,10 +41,7 @@
       <div
         class="quill-editor"
         :content="content"
-        @change="onEditorChange($event)"
-        @blur="onEditorBlur($event)"
-        @focus="onEditorFocus($event)"
-        @ready="onEditorReady($event)"
+        @change="onEditorChange"
         v-quill:myQuillEditor="editorOption"
       ></div>
     </div>
@@ -73,7 +70,7 @@ export default {
   },
   data() {
     return {
-      content: '<p>I am Example</p>',
+      content: '',
       editorOption: {
         // some quill options
         modules: {
@@ -93,42 +90,42 @@ export default {
             ['clean'],
             ['link', 'image', 'video']
           ]
-        }
+        },
+        placeholder:"",
+        theme:"snow"
       },
       title: '',
       tagId: []
     }
   },
-  mounted() {
-    setTimeout(() => {
-      this.content = 'i am changed'
-    }, 3000)
-  },
   methods: {
-    onEditorBlur(editor) {
-      console.log('editor blur!', editor)
-    },
-    onEditorFocus(editor) {
-      console.log('editor focus!', editor)
-    },
-    onEditorReady(editor) {
-      console.log('editor ready!', editor)
-    },
+    // onEditorBlur(editor) {
+    //   console.log('editor blur!', editor)
+    // },
+    // onEditorFocus(editor) {
+    //   console.log('editor focus!', editor)
+    // },
+    // onEditorReady(editor) {
+    //   console.log('editor ready!', editor)
+    // },
     onEditorChange({ editor, html, text }) {
-      // console.log('editor change!', editor, html, text)
+       console.log('editor change!', editor, html, text)
       this.content = html
     },
     submitData(){
-        if(!this.title){
-          this.$Message.warning('请填写title');
+      var self=this;
+        if(!self.title){
+          self.$Message.warning('请填写title');
           return;
         }
-        if(!this.content){
-          this.$Message.warning('请填写内容');
+        if(!self.content){
+          self.$Message.warning('请填写内容');
           return;
         }
-        this.$axios.post('/admin/article/insertArticleData',{title:this.title,content:this.content,tag:this.tagId}).then(res=>{
-
+        self.$axios.post('/admin/article/insertArticleData',{title:self.title,content:self.content,tag:self.tagId}).then(res=>{
+            if(res.success){
+               self.$router.push('/admin/article/article-list');
+            }
         })
     }
   }

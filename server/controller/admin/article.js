@@ -28,3 +28,35 @@ exports.insertData=async ctx=>{
           }
     }
 }
+/**
+* @func 
+* @des 查询（id,关键字，日期）
+*/
+exports.queryArticle=async ctx=>{
+    let {id,limit=10,page=1,searchKeys,time}=ctx.request.body,
+        queryOption={};
+        let reg=new RegExp(searchKeys,i)
+    if(id){
+        queryOption={
+            _id:id
+        };
+    }else if(searchKeys){
+        queryOption={
+            $or:[{
+                title:{
+                    $regex:reg
+                }
+            },{
+                content:{
+                    $regex:reg
+                }
+            }]
+        }
+    }
+    try {
+        let all=(await Article.find(queryOption).exec()).length
+        Article.find(queryOption)
+    } catch (error) {
+        
+    }
+}
