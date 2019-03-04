@@ -7,8 +7,8 @@
       closable
       @on-close="handleClose(item._id)"
     >{{item.link_name}}</Tag>
-    <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加标签</Button>
-    <Modal v-model="modal" draggable scrollable title="新建友链" footer-hide="true">
+    <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加友链</Button>
+    <Modal v-model="modal" draggable scrollable title="新建友链" :footer-hide="true" >
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="友链名" prop="name">
           <Input v-model="formValidate.name" placeholder="请输入友链名"></Input>

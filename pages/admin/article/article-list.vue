@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div slot="top" class="top-pane pane">
-      <Input v-model="value" placeholder="请输入关键字查询" style="width: 300px" class="search-input"/>
+      <Input v-model="param.searchKeys" placeholder="请输入关键字查询" style="width: 300px" class="search-input"/>
       <DatePicker type="daterange" placement="top-start" placeholder="请选择查询日期" style="width: 200px"></DatePicker>
-      <Button type="primary" icon="ios-search" class="search-button">Search</Button>
+      <Button type="primary" icon="ios-search" class="search-button" @click="getData">Search</Button>
     </div>
     <div slot="bottom" class="bottom-pane pane">
-      <Table border :columns="columns7" :data="data6" class="table-list" height="600"></Table>
+      <Table border :columns="columns" :data="data" class="table-list" height="600"></Table>
       <div class="page">
          <Page :total="100" show-sizer />
       </div>
@@ -17,7 +17,7 @@
 export default {
   data() {
     return {
-      columns7: [
+      columns: [
         {
           title: '标题',
           key: 'name',
@@ -29,18 +29,18 @@ export default {
                   type: 'person'
                 }
               }),
-              h('strong', params.row.name)
+              h('strong', params.row.title)
             ])
           }
         },
         {
           title: '内容',
-          key: 'age',
+          key: 'content',
            ellipsis:true,
         },
         {
           title: '标签',
-          key: 'address',
+          key: 'tags',
            ellipsis:true,
         },
         {
@@ -62,7 +62,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.show(params.index)
+                     this.$router.push('/admin/article/articleAdd/'+params.row._id);
                     }
                   }
                 },
@@ -77,7 +77,10 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index)
+                      this.data.splice(params.index,1);
+                      this.$axios.post('/admin/article/deleteArticleById',{_id:params.row._id}).then(res=>{
+                       this.$Message.success('删除成功');
+                      })
                     }
                   }
                 },
@@ -87,7 +90,7 @@ export default {
           }
         }
       ],
-      data6: [
+      data: [
         {
           name: 'John Brown',
           age: 18,
@@ -108,8 +111,16 @@ export default {
           age: 26,
           address: 'Ottawa No. 2 Lake Park'
         }
-      ]
+      ],
+      param:{
+        limit:10,
+        page:1,
+        searchKeys:""
+      }
     }
+  },
+  created(){
+    this.getData();
   },
   methods: {
     show(index) {
@@ -122,6 +133,20 @@ export default {
     },
     remove(index) {
       this.data6.splice(index, 1)
+    },
+    getData(){
+      var self=this;
+        this.$axios.post('/admin/article/queryArticle',self.param).then(res=>{
+          let data=res.data.res;
+          for(let i in data){
+            let temp=[];
+              for(let j in data[i].tag){
+                temp.push(data[i].tag[j].tag_name);
+              }
+               data[i].tags=temp.join(',');
+          }
+          self.data=data;
+     });
     }
   }
 }

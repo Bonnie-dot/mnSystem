@@ -8,7 +8,7 @@
       @on-close="removeData(item._id)"
     >{{item.tag_name}}</Tag>
     <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加标签</Button>
-    <Modal v-model="modal" title="新建标签" footer-hide="true" draggable scrollable>
+    <Modal v-model="modal" title="新建标签" :footer-hide="true" draggable scrollable>
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="标签名" prop="name">
           <Input v-model="formValidate.name" placeholder="请输入标签名"></Input>

@@ -7,12 +7,13 @@ let article=new Schema({
     content:{
         type:String
     },
-    tag:{
-        type:[String]
-    },
     create_date:{
         type:Date,
         default:Date.now
-    }
+    },
+    tag:[{//连接tags
+        type:Schema.Types.ObjectId,
+        ref:'Tag'
+    }]
 })
 mongoose.model('article',article);

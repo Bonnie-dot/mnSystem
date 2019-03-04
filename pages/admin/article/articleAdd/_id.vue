@@ -47,7 +47,7 @@
     </div>
     <div class="tag">标签：
       <Select v-model="tagId" multiple style="width:260px">
-        <Option v-for="item in tagList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Option v-for="item in tagList" :value="item._id" :key="item._id">{{ item.tag_name }}</Option>
       </Select>
     </div>
     <div class="submit-btn">
@@ -57,16 +57,20 @@
 </template>
 <script>
 export default {
-  async asyncData({$axios}){
-    let res=await $axios.get('/admin/tag/queryTags')
-    let tagList=[];
-    res.data.res.forEach(v => {
-      tagList.push({
-        value:v._id,
-        label:v.tag_name
-      })
+  async asyncData({$axios,params}){
+    let res=(await $axios.post('/admin/article/findArticleById',{_id:params.id})).data.res;
+    let tagList=(await $axios.get('/admin/tag/queryTags')).data.res;
+    let tagId=[]; 
+    res.tag.forEach(v => {
+      tagId.push(v._id);
     });
-    return {tagList}
+    return {
+      content:res.content,
+      title:res.title,
+      articleId:params.id,
+      tagId,
+      tagList
+    }
   },
   data() {
     return {
@@ -95,7 +99,7 @@ export default {
         theme:"snow"
       },
       title: '',
-      tagId: []
+      tagId: [],
     }
   },
   methods: {
@@ -103,7 +107,6 @@ export default {
       this.content = html
     },
     submitData(){
-      console.log('我进来了')
       var self=this;
         if(!self.title){
           self.$Message.warning('请填写title');
@@ -113,8 +116,9 @@ export default {
           self.$Message.warning('请填写内容');
           return;
         }
-        self.$axios.post('/admin/article/insertArticleData',{title:self.title,content:self.content,tag:self.tagId}).then(res=>{
+        self.$axios.post('/admin/article/updateArticleById',{param:{title:self.title,content:self.content,tag:self.tagId},id:{_id:self.articleId}}).then(res=>{
             if(res.success){
+              self.$Message.success('更新成功');
                self.$router.push('/admin/article/article-list');
             }
         })

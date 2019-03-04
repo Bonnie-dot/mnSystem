@@ -10,7 +10,8 @@ export default function ({ $axios, redirect }) {
     $axios.onResponse(config => {//将错误统一抛出
         let {success,data}=config.data;
         if(!success){
-           Message.error(data.msg)
+          var msg=(typeof data.msg)=='string'?data.msg:data.msg.message;
+           Message.error(msg)
            if(data.code==401){
               redirect('/admin/login');
            }
