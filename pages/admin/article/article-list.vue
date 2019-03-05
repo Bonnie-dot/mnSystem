@@ -2,13 +2,16 @@
   <div class="container">
     <div slot="top" class="top-pane pane">
       <Input v-model="param.searchKeys" placeholder="请输入关键字查询" style="width: 300px" class="search-input"/>
-      <DatePicker type="daterange" placement="top-start" placeholder="请选择查询日期" style="width: 200px"></DatePicker>
-      <Button type="primary" icon="ios-search" class="search-button" @click="getData">Search</Button>
+      <DatePicker type="daterange" placement="top-start" placeholder="请选择查询日期" style="width: 200px" :value="param.time" format="yyyy-MM-dd" 
+      @on-change="handleChange"
+       @on-clear="handleClear"
+      ></DatePicker>
+      <Button type="primary" icon="ios-search" class="search-button" @click="getData">搜索</Button>
     </div>
     <div slot="bottom" class="bottom-pane pane">
       <Table border :columns="columns" :data="data" class="table-list" height="600"></Table>
       <div class="page">
-         <Page :total="100" show-sizer />
+         <Page :total="total"  show-total @on-change='changePageSize'/>
       </div>
     </div>
   </div>
@@ -90,53 +93,23 @@ export default {
           }
         }
       ],
-      data: [
-        {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park'
-        },
-        {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake ParkLondon No. 1 Lake ParkLondon No. 1 Lake ParkLondon No. 1 Lake ParkLondon No. 1 Lake ParkLondon No. 1 Lake Park'
-        },
-        {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park'
-        },
-        {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park'
-        }
-      ],
+      data: [],
       param:{
         limit:10,
         page:1,
-        searchKeys:""
-      }
+        searchKeys:"",
+        time:[]
+      },
+      total:1
     }
   },
   created(){
     this.getData();
   },
   methods: {
-    show(index) {
-      this.$Modal.info({
-        title: 'User Info',
-        content: `Name：${this.data6[index].name}<br>Age：${
-          this.data6[index].age
-        }<br>Address：${this.data6[index].address}`
-      })
-    },
-    remove(index) {
-      this.data6.splice(index, 1)
-    },
     getData(){
       var self=this;
-        this.$axios.post('/admin/article/queryArticle',self.param).then(res=>{
+        self.$axios.post('/admin/article/queryArticle',self.param).then(res=>{
           let data=res.data.res;
           for(let i in data){
             let temp=[];
@@ -146,7 +119,18 @@ export default {
                data[i].tags=temp.join(',');
           }
           self.data=data;
+          self.total=res.data.total;
      });
+    },
+    handleChange(data){
+      this.param.time=data;
+    },
+    handleClear(){
+       this.param.time=[];
+    },
+    changePageSize(page){
+     this.param.page=page;
+     this.getData();
     }
   }
 }

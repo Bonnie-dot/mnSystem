@@ -171,16 +171,16 @@
 import { mapState,mapMutations  } from 'vuex'
 export default {
   async asyncData({$axios,store}){
-    let [res1,res2]=await Promise.all([
+    let [res1,res2,res3]=await Promise.all([
         $axios.get('/admin/visitor/queryNumberListGroupByMonth'),
-         $axios.get('/admin/visitor/queryVisitorNumber')
+        $axios.get('/admin/visitor/queryVisitorNumber'),
+        $axios.get('/admin/article/getArticleList'),
     ]);
-    return {visitDate:res1.data.res,visit:res2.data};
+    return {visitDate:res1.data.res,visit:res2.data,articleList:res3.data.res,articleTotal:res3.data.total};
   },
   data() {
     return {
       recentltTime: '2019-1-19',
-      articleTotal: 200,
     }
   },
   mounted() {
@@ -237,6 +237,7 @@ export default {
       myChart.setOption(option)
     },
     getArticleNumber() {
+      console.log(JSON.stringify(this.articleList))
       var echart = document.getElementById('echart2')
       var option = {
         title: {
@@ -263,7 +264,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: this.articleList.time,
             axisTick: {
               alignWithLabel: true
             }
@@ -279,7 +280,7 @@ export default {
             name: '文章总数',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220],
+            data:this.articleList.data,
              areaStyle: {
               color: '#19be6b'
             },

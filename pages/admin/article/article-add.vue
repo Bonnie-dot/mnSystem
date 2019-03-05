@@ -31,6 +31,15 @@
 .submit-btn button{
  width: 100px;
 }
+.btn {
+  color: #fff;
+  background-color: #2d8cf0;
+  border:1px solid #2d8cf0;
+  padding: 6px 15px 6px 15px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer; 
+}
 </style>
 <template>
   <div class="container">
@@ -51,7 +60,7 @@
       </Select>
     </div>
     <div class="submit-btn">
-      <Button type="primary" width="200px" size="large"  @click="submitData">提交</Button>
+      <button type="button"  @click="submitData" class="btn">提交</button>
     </div>
   </div>
 </template>
@@ -103,7 +112,6 @@ export default {
       this.content = html
     },
     submitData(){
-      console.log('我进来了')
       var self=this;
         if(!self.title){
           self.$Message.warning('请填写title');
