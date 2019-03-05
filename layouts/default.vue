@@ -129,7 +129,7 @@ html {
   <div class="layout">
     <Layout>
       <Header>
-        <Menu mode="horizontal" theme="dark" active-name="1">
+        <Menu mode="horizontal" theme="dark" active-name="/admin/userInfo">
           <div class="header">
             <div class="layout-logo">不积跬步，无以至千里</div>
             <div class="user">
@@ -155,9 +155,9 @@ html {
           :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}"
           breakpoint="md"
         >
-          <Menu :open-names="['1']" active-name="1" theme="dark" width="auto">
+          <Menu :open-names="['1']" active-name="1" theme="dark" width="auto" @on-select="selectEvent">
             <nuxt-link to="/admin" class="link">
-              <MenuItem name="1">
+              <MenuItem name="admin">
                 <Icon type="md-home"></Icon>
                 <span>首页</span>
               </MenuItem>
@@ -166,24 +166,24 @@ html {
               <template slot="title">
                 <Icon type="ios-list-box"></Icon>文章管理
               </template>
-              <MenuItem name="2-1">
+              <MenuItem name="admin/article/article-list">
                 <nuxt-link to="/admin/article/article-list">
                   <span>文章列表</span>
                 </nuxt-link>
               </MenuItem>
-              <MenuItem name="2-2">
+              <MenuItem name="admin/article/article-add">
                 <nuxt-link to="/admin/article/article-add">
                   <span>新增文章</span>
                 </nuxt-link>
               </MenuItem>
             </Submenu>
-            <MenuItem name="3">
+            <MenuItem name="admin/tag">
               <Icon type="ios-paper-plane"></Icon>
               <nuxt-link to="/admin/tag">
                 <span>标签管理</span>
               </nuxt-link>
             </MenuItem>
-            <MenuItem name="4">
+            <MenuItem name="admin/link">
               <Icon type="ios-pricetags"></Icon>
               <nuxt-link to="/admin/link">
                 <span>友链管理</span>
@@ -193,7 +193,7 @@ html {
               <template slot="title">
                 <Icon type="ios-contact"></Icon>用户管理
               </template>
-              <MenuItem name="3-1">
+              <MenuItem name="admin/userInfo">
                 <nuxt-link to="/admin/userInfo">信息修改</nuxt-link>
               </MenuItem>
             </Submenu>
@@ -201,9 +201,9 @@ html {
         </Sider>
         <Layout :style="{padding: '0 24px 24px 228px'}">
           <Breadcrumb :style="{margin: '24px 0'}">
-            <BreadcrumbItem>Home</BreadcrumbItem>
-            <BreadcrumbItem>Components</BreadcrumbItem>
-            <BreadcrumbItem>Layout</BreadcrumbItem>
+            <BreadcrumbItem v-for="(item,idx) in breadList"  :key="idx" >
+             <nuxt-link  :to="item.to">{{item.name}}</nuxt-link>
+            </BreadcrumbItem>
           </Breadcrumb>
           <Content :style="{padding: '24px', background: '#fff',height:'85vh'}">
             <nuxt/>
@@ -215,13 +215,24 @@ html {
 </template>
 <script>
 import webStorageCache from "web-storage-cache";
-const ws = new webStorageCache();
+const ws = new webStorageCache();     
 import md5 from "md5";
 import { mapState } from "vuex";
 export default {
   data() {
     return {
-      password: ""
+      password: "",
+      breadList:[],
+      breadDetail:{
+        'admin':'首页',
+        'article':'文章管理',
+        'article-add':'新增文章',
+        'article-list':'文章列表',
+        'userInfo':'信息修改',
+        'tag':'标签管理',
+        'link':'友链管理'
+      },
+      activeName:""
     };
   },
   computed: mapState("admin", {
@@ -232,6 +243,8 @@ export default {
       //核查是否登录
       this.$router.push("/admin/login");
     }
+    this.selectEvent(location.pathname.slice(1));
+    this.activeName=location.pathname.slice(1);
   },
   methods: {
     logout() {
@@ -239,7 +252,7 @@ export default {
     },
     changeOper(val) {
       var self = this;
-      if (val == "mdf") {
+      if (val == "mdf") {``
         self.$Modal.confirm({
           render: h => {
             return h("Input", {
@@ -272,6 +285,21 @@ export default {
       } else {
         this.$router.push("/admin/login");
       }
+    },
+    selectEvent(name){//配置路由
+     this.activeName=name;
+     let arr=name.split('/');
+     let temp=[],str="/";
+      arr.forEach((v,i) => {
+        let name=this.breadDetail[v];
+        str+=v+'/';
+       if(name=="文章管理"){
+         temp.push({name:name,to:'/admin/article/article-list'})
+       }else{
+          temp.push({name:name,to:str.slice(0,str.length-1)})
+       }
+      });
+      this.breadList=temp;
     }
   }
 };

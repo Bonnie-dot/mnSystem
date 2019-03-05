@@ -237,7 +237,6 @@ export default {
       myChart.setOption(option)
     },
     getArticleNumber() {
-      console.log(JSON.stringify(this.articleList))
       var echart = document.getElementById('echart2')
       var option = {
         title: {
