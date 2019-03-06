@@ -26,7 +26,7 @@
 }
 .ivu-layout-content{
     min-height: calc(100vh - 204px);
-    padding-bottom: 140px;
+    padding-bottom: 160px;
     
 }
 
@@ -35,7 +35,7 @@
 <template>
    <Layout>
         <Header>
-            <div class="title"><h2>标题</h2></div>
+            <div class="title"><h2>安然</h2></div>
             <div class="menu">
                 <Menu mode="horizontal" :theme="theme1" active-name="1">
         <MenuItem name="2">
@@ -47,7 +47,7 @@
          <MenuItem name="2">
          <nuxt-link to="/front/aboutMe">
             <Icon type="ios-people" />
-             关于我们
+             关于我
         </nuxt-link>    
         </MenuItem>
     </Menu>

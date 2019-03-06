@@ -63,7 +63,6 @@ exports.queryArticle=async ctx=>{
     }
     try {
         let total=(await Article.find(queryOption).countDocuments().exec())
-        let res2=await Article.find(queryOption)
         let res=await Article.find(queryOption).populate({
             path:'tag',//关联字段
             select:'tag_name'//返回字段

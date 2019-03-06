@@ -8,6 +8,7 @@ const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 const admin = require('./routes/admin')
+const front=require('./routes/front')
 const db = require('./models')
 const server = require('koa-static')
 const fs=require('fs')
@@ -46,6 +47,7 @@ async function start() {
     await builder.build()
   }
   router.use('/admin', admin);
+  router.use('/front',front);
   app.use(router.routes()).use(router.allowedMethods());
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset

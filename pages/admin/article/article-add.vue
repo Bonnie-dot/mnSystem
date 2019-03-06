@@ -55,7 +55,7 @@
       ></div>
     </div>
     <div class="tag">标签：
-      <Select v-model="tagId" multiple style="width:260px">
+      <Select v-model="tagId"  style="width:260px">
         <Option v-for="item in tagList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </div>
