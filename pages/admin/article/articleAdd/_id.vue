@@ -57,6 +57,7 @@
 </template>
 <script>
 export default {
+  layout: "default",
   async asyncData({$axios,params}){
     let res=(await $axios.post('/admin/article/findArticleById',{_id:params.id})).data.res;
     let tagList=(await $axios.get('/admin/tag/queryTags')).data.res;
@@ -122,6 +123,11 @@ export default {
                self.$router.push('/admin/article/article-list');
             }
         })
+    }
+  },
+   head(){
+    return {
+      title:"修改文章"
     }
   }
 }

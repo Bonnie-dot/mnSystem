@@ -45,6 +45,11 @@ export default {
       return{
 
       }
+  },
+   head(){
+    return {
+      title:"文章详情"
+    }
   }
 };
 </script>

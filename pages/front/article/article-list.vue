@@ -101,6 +101,11 @@ export default {
     openDedetail(id){
          this.$router.push('/front/article/article-detail/'+id);
     }
+  },
+   head(){
+    return {
+      title:"文章列表"
+    }
   }
 };
 </script>

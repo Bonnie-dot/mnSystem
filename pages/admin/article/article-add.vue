@@ -66,6 +66,7 @@
 </template>
 <script>
 export default {
+  layout: "default",
   async asyncData({$axios}){
     let res=await $axios.get('/admin/tag/queryTags')
     let tagList=[];
@@ -126,6 +127,11 @@ export default {
                self.$router.push('/admin/article/article-list');
             }
         })
+    }
+  },
+   head(){
+    return {
+      title:"新增文章"
     }
   }
 }

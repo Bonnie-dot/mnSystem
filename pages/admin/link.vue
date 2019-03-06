@@ -30,6 +30,7 @@
 </template>
 <script>
 export default {
+  layout: "default",
   data() {
     return {
       count: [0, 1, 2],
@@ -85,6 +86,11 @@ export default {
       this.$axios.get("/admin/link/queryLink").then(res => {
         this.list = res.data.res;
       });
+    }
+  },
+   head(){
+    return {
+      title:"友链"
     }
   }
 };

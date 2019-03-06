@@ -23,6 +23,7 @@
 </template>
 <script>
 export default {
+  layout: "default",
   data() {
     return {
       tagName: "",
@@ -72,6 +73,11 @@ export default {
     handleReset(name){
         this.$refs[name].resetFields();
         this.modal=false;
+    }
+  },
+   head(){
+    return {
+      title:"标签"
     }
   }
 };

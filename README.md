@@ -5,29 +5,40 @@
 ├─.nuxt
 │  ├─components
 │  └─views
+├─.vscode
+├─assets
+│  └─images
 ├─components
-├─dist
-│  ├─article
-│  │  ├─article-add
-│  │  └─article-list
-│  ├─documents
-│  ├─home
-│  ├─images
-│  └─_nuxt
-│      ├─fonts
-│      └─img
 ├─layouts
 ├─middleware
 ├─pages
-│  └─article
+│  ├─admin
+│  │  └─article
+│  │      └─articleAdd
+│  └─front
+│      └─article
+│          └─article-detail
 ├─plugins
+├─server
+│  ├─config
+│  ├─controller
+│  │  ├─admin
+│  │  └─front
+│  ├─models
+│  │  └─admin
+│  ├─public
+│  │  ├─img
+│  │  └─upload
+│  ├─routes
+│  │  ├─admin
+│  │  └─front
+│  └─utils
 ├─static
-│  ├─documents
-│  └─images
+│  └─documents
+│      └─axure
 └─store
 ```
-## 目前进度
-目前完成后台基本已经完成，前台界面待开发。
+
 ## 用法
 
 ``` bash

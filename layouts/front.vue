@@ -1,11 +1,11 @@
 <style>
-.ivu-layout-header{
+.front .ivu-layout-header{
     background: #2d8cf0 !important;
     color: #fff;
     display: flex;
     justify-content: space-between;
 }
-.ivu-layout-footer{
+.front .ivu-layout-footer{
     height: 140px;
     position: fixed;
     bottom: 0;
@@ -16,15 +16,15 @@
     line-height: 140px;
     padding: 0 !important;
 }
-.ivu-menu-item a{
+.front .ivu-menu-item a{
     width: 100%;
     height: 100%;
     color: #fff;
 }
-.ivu-menu-item a:hover{
+.front .ivu-menu-item a:hover{
     color: #fff;
 }
-.ivu-layout-content{
+.front .ivu-layout-content{
     min-height: calc(100vh - 204px);
     padding-bottom: 160px;
     
@@ -33,7 +33,7 @@
 </style>
 
 <template>
-   <Layout>
+   <Layout class="front">
         <Header>
             <div class="title"><h2>安然</h2></div>
             <div class="menu">

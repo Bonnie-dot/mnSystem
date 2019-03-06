@@ -120,6 +120,7 @@
 import { mapState, mapMutations } from "vuex";
 import md5 from 'md5';
 export default {
+  layout: "default",
   data() {
     return {
       header: {
@@ -195,6 +196,11 @@ export default {
          })
         }
       });
+    }
+  },
+  head(){
+    return {
+      title:"用户信息"
     }
   }
 };

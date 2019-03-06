@@ -11,7 +11,21 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: pkg.description },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content: 'Bonnie,Bonnie的博客,JavaScript,个人博客,blog'
+      },
+      {
+        hid: 'description',
+        name: 'description',
+        content: '专注于WEB前端开发'
+      },
+      {
+        property: 'og:locale',
+        content: 'zh_CN'
+      }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -35,7 +49,7 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['~plugins/iview', '~plugins/echart','~plugins/nuxt-quill-plugin.js','~plugins/axios.config'
+  plugins: ['~plugins/iview', '~plugins/echart', '~plugins/nuxt-quill-plugin.js', '~plugins/axios.config'
   ],
 
   /*
@@ -60,7 +74,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
+
     }
   }
 }

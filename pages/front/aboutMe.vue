@@ -81,7 +81,12 @@ export default {
                {name:"NODE",size:50,state:"active"},
                {name:"Mongodb",size:50,state:"active"}]
        }
+    },
+   head(){
+    return {
+      title:"关于我"
     }
+  }
 }
 </script>
 

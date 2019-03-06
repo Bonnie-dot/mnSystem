@@ -18,6 +18,7 @@
 </template>
 <script>
 export default {
+  layout: "default",
   data() {
     return {
       columns: [
@@ -131,6 +132,11 @@ export default {
     changePageSize(page){
      this.param.page=page;
      this.getData();
+    }
+  },
+   head(){
+    return {
+      title:"文章列表"
     }
   }
 }

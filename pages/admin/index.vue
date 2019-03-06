@@ -170,6 +170,7 @@
 <script>
 import { mapState,mapMutations  } from 'vuex'
 export default {
+  layout: "default",
   async asyncData({$axios,store}){
     let [res1,res2,res3]=await Promise.all([
         $axios.get('/admin/visitor/queryNumberListGroupByMonth'),
@@ -294,6 +295,11 @@ export default {
       }
       var myChart = this.$echarts.init(echart)
       myChart.setOption(option)
+    }
+  },
+   head(){
+    return {
+      title:"首页"
     }
   }
 }
