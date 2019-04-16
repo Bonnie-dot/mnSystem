@@ -1,4 +1,7 @@
 <style>
+.front .container{
+    padding-bottom: 80px;
+}
 .front .ivu-layout-header{
     background: #2d8cf0 !important;
     color: #fff;
@@ -6,15 +9,17 @@
     justify-content: space-between;
 }
 .front .ivu-layout-footer{
-    height: 140px;
-    position: fixed;
+    height: 80px;
     bottom: 0;
     width: 100%;
     background: #2d8cf0 !important;
     color: #fff !important;
     text-align: center;
-    line-height: 140px;
+    line-height: 80px;
     padding: 0 !important;
+}
+.front .ivu-layout-footer a{
+    color: #fff;
 }
 .front .ivu-menu-item a{
     width: 100%;
@@ -24,11 +29,7 @@
 .front .ivu-menu-item a:hover{
     color: #fff;
 }
-.front .ivu-layout-content{
-    min-height: calc(100vh - 204px);
-    padding-bottom: 160px;
-    
-}
+
 
 </style>
 
@@ -39,8 +40,8 @@
             <div class="menu">
                 <Menu mode="horizontal" :theme="theme1" active-name="1">
         <MenuItem name="2">
-         <nuxt-link to="/front/article/article-list">
-            <Icon type="ios-people" />
+         <nuxt-link to="/front/index">
+            <Icon type="md-bookmarks" />
             前端技术
         </nuxt-link>    
         </MenuItem>
@@ -55,7 +56,7 @@
         </Header>
         <Content> 
             <nuxt/>
-             <Footer>©Bonnie Blog 2019. Powered By cq</Footer>
+             <Footer>© 2019 - Bonnie Blog - <a href="http://www.miitbeian.gov.cn/">蜀ICP备19008745号-1</a></Footer>
         </Content>
        
     </Layout>

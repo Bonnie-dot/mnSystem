@@ -6,7 +6,7 @@
     margin: 0 auto;
     margin-top:10px;
     font-size: 14px;
-    height: calc(100vh - 204px);
+    min-height: calc(100vh - 154px);
     border-radius: 5px;
 }
 .ctx h2{
