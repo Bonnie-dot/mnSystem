@@ -2,7 +2,6 @@ import {Message} from 'iview'
 import WebStorageCache from 'web-storage-cache'
 const wsCache=new WebStorageCache()
 export default function ({ $axios, redirect }) {
-    // $axios.defaults.baseURL='http://39.97.165.142:80';
     $axios.defaults.baseURL='/';
     $axios.onRequest(config => {//携带token验证
         config.headers['x-access-token'] = (wsCache.get('token') || {});

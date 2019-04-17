@@ -99,7 +99,7 @@ exports.uploadImg = async ctx => {
     try {
         var imgPath = ctx.request.files.file.path
         let idx = imgPath.indexOf('upload')
-        let res=await User.findOneAndUpdate({_id:ctx.request.body.userId},{avator:url.resolve(ctx.origin,imgPath.slice(idx-1))},{new:true}).exec();
+        let res=await User.findOneAndUpdate({_id:ctx.request.body.userId},{avator:url.resolve(ctx.ip,imgPath.slice(idx-1))},{new:true}).exec();
         if(res){
             ctx.body = {
                 success: true,

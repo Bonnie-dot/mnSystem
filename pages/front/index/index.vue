@@ -1,4 +1,7 @@
 <style>
+.front .list{
+ min-height: calc(100vh - 154px);
+}
 .group {
   height: 200px;
   background: #fff;
@@ -36,16 +39,25 @@
  justify-content: center;
  margin-top:10px; 
 }
+.details {
+ width: 81%;
+}
+.front .content{
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 </style>
 <template>
-  <div class="container">
+  <div class="container list">
     <section class="group" v-for="item in list" :key="item._id" @click="openDedetail(item._id)">
       <div class="tag">{{item.tags}}</div>
       <div class="details">
         <summary class="title">
           <h2>{{item.title}}</h2>
         </summary>
-        <p class="content">{{item.content}}</p>
+        <p class="content">{{item.content.replace(/<[^>]+>/g,"")}}</p>
         <div class="last">
           <span class="time">
             <Icon type="md-alarm"/>{{new Date(item.create_date).Format("yyyy-M-d h:m") }}
@@ -99,7 +111,7 @@ export default {
      this.getData();
     },
     openDedetail(id){
-         this.$router.push('/front/index/article-detail/'+id);
+         this.$router.push('/front/article-detail/'+id);
     }
   },
    head(){
