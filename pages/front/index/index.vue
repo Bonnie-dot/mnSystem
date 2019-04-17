@@ -99,12 +99,12 @@ export default {
      this.getData();
     },
     openDedetail(id){
-         this.$router.push('/front/article/article-detail/'+id);
+         this.$router.push('/front/index/article-detail/'+id);
     }
   },
    head(){
     return {
-      title:"文章列表"
+      title:"首页"
     }
   }
 };

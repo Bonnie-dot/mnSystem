@@ -28,7 +28,7 @@ module.exports = {
       }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'shortcut icon', type: 'image/x-icon', href: './favicon.ico' }
     ]
   },
 
@@ -76,5 +76,9 @@ module.exports = {
     extend(config, ctx) {
 
     }
-  }
+  },
+  server: {
+    port: 8000, // default: 3000
+    host: '39.97.165.142', // default: localhost
+  },
 }
