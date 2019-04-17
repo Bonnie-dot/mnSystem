@@ -170,7 +170,7 @@
 <script>
 import { mapState,mapMutations  } from 'vuex'
 export default {
-  layout: "default",
+  layout: "admin",
   async asyncData({$axios,store}){
     let [res1,res2,res3]=await Promise.all([
         $axios.get('/admin/visitor/queryNumberListGroupByMonth'),

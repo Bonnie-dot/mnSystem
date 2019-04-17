@@ -40,7 +40,7 @@ export default {
    return {list};
   },
    middleware: 'formateDate',
-   layout: "front",
+   layout: "default",
   data(){
       return{
 

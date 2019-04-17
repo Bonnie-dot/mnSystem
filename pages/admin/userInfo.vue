@@ -120,7 +120,7 @@
 import { mapState, mapMutations } from "vuex";
 import md5 from 'md5';
 export default {
-  layout: "default",
+  layout: "admin",
   data() {
     return {
       header: {

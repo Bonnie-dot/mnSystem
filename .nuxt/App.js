@@ -7,11 +7,11 @@ import '../node_modules/_quill@1.3.6@quill/dist/quill.bubble.css'
 
 import '../node_modules/_quill@1.3.6@quill/dist/quill.core.css'
 
+import _77068119 from '../layouts/admin.vue'
 import _6f6c098b from '../layouts/default.vue'
-import _77535bf3 from '../layouts/front.vue'
 import _77a66d33 from '../layouts/login.vue'
 
-const layouts = { "_default": _6f6c098b,"_front": _77535bf3,"_login": _77a66d33 }
+const layouts = { "_admin": _77068119,"_default": _6f6c098b,"_login": _77a66d33 }
 
 export default {
   head: {"title":"mnSystem","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"person blog"},{"hid":"keywords","name":"keywords","content":"Bonnie,Bonnie的博客,JavaScript,个人博客,blog"},{"hid":"description","name":"description","content":"专注于WEB前端开发"},{"property":"og:locale","content":"zh_CN"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
@@ -107,8 +107,6 @@ export default {
     },
 
     setLayout(layout) {
-      if(layout && typeof layout !== 'string') throw new Error('[nuxt] Avoid using non-string value as layout property.')
-
       if (!layout || !layouts['_' + layout]) {
         layout = 'default'
       }

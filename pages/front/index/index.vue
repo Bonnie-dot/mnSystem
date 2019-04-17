@@ -63,7 +63,7 @@
 </template>
 <script>
 export default {
-  layout: "front",
+  layout: "default",
   data() {
     return {
       list: [],

@@ -66,7 +66,7 @@
 </template>
 <script>
 export default {
-  layout: "default",
+   layout: "admin",
   async asyncData({$axios}){
     let res=await $axios.get('/admin/tag/queryTags')
     let tagList=[];

@@ -12,7 +12,7 @@ const _92441ad6 = () => interopDefault(import('../pages/front/index/index.vue' /
 const _2b925617 = () => interopDefault(import('../pages/admin/article/article-add.vue' /* webpackChunkName: "pages/admin/article/article-add" */))
 const _399226d0 = () => interopDefault(import('../pages/admin/article/article-list.vue' /* webpackChunkName: "pages/admin/article/article-list" */))
 const _ff70208e = () => interopDefault(import('../pages/admin/article/articleAdd/_id.vue' /* webpackChunkName: "pages/admin/article/articleAdd/_id" */))
-const _5939cf00 = () => interopDefault(import('../pages/front/index/article-detail/_id.vue' /* webpackChunkName: "pages/front/index/article-detail/_id" */))
+const _66da6323 = () => interopDefault(import('../pages/front/article-detail/_id.vue' /* webpackChunkName: "pages/front/article-detail/_id" */))
 
 Vue.use(Router)
 
@@ -129,9 +129,9 @@ export function createRouter() {
       component: _ff70208e,
       name: "admin-article-articleAdd-id"
     }, {
-      path: "/front/index/article-detail/:id?",
-      component: _5939cf00,
-      name: "front-index-article-detail-id"
+      path: "/front/article-detail/:id?",
+      component: _66da6323,
+      name: "front-article-detail-id"
     }],
 
     fallback: false

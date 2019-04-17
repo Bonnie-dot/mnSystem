@@ -23,7 +23,7 @@
 </template>
 <script>
 export default {
-  layout: "default",
+  layout: "admin",
   data() {
     return {
       tagName: "",

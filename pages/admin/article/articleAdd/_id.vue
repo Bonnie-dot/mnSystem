@@ -57,7 +57,7 @@
 </template>
 <script>
 export default {
-  layout: "default",
+   layout: "admin",
   async asyncData({$axios,params}){
     let res=(await $axios.post('/admin/article/findArticleById',{_id:params.id})).data.res;
     let tagList=(await $axios.get('/admin/tag/queryTags')).data.res;

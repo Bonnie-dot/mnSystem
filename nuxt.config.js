@@ -80,5 +80,6 @@ module.exports = {
     extend(config, ctx) {
 
     }
-  }
+  },
+  render: { resourceHints: false },
 }
