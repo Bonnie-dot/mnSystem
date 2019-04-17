@@ -77,8 +77,8 @@ module.exports = {
 
     }
   },
-  server: {
-    port: 8000, // default: 3000
-    host: '39.97.165.142', // default: localhost
-  },
+  render: {
+
+    resourceHints: false,
+    },
 }
