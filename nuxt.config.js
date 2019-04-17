@@ -28,7 +28,7 @@ module.exports = {
       }
     ],
     link: [
-      { rel: 'shortcut icon', type: 'image/x-icon', href: './favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
 
@@ -49,7 +49,11 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['~plugins/iview', '~plugins/echart', '~plugins/nuxt-quill-plugin.js', '~plugins/axios.config'
+  plugins: [
+    {src:'~plugins/iview',ssr:false},
+    {src:'~plugins/echart',ssr:false},
+    {src:'~plugins/nuxt-quill-plugin.js',ssr:false},
+    {src:'~plugins/axios.config',ssr:false},
   ],
 
   /*
@@ -76,9 +80,5 @@ module.exports = {
     extend(config, ctx) {
 
     }
-  },
-  render: {
-
-    resourceHints: false,
-    },
+  }
 }

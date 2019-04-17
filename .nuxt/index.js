@@ -12,10 +12,10 @@ import { createStore } from './store.js'
 /* Plugins */
 
 import nuxt_plugin_axios_aa9197b4 from 'nuxt_plugin_axios_aa9197b4' // Source: ./axios.js (mode: 'all')
-import nuxt_plugin_iview_fabcf5d2 from 'nuxt_plugin_iview_fabcf5d2' // Source: ../plugins/iview (mode: 'all')
-import nuxt_plugin_echart_6ca10da0 from 'nuxt_plugin_echart_6ca10da0' // Source: ../plugins/echart (mode: 'all')
-import nuxt_plugin_nuxtquillplugin_3ab6ceae from 'nuxt_plugin_nuxtquillplugin_3ab6ceae' // Source: ../plugins/nuxt-quill-plugin.js (mode: 'all')
-import nuxt_plugin_axios_0fcbe911 from 'nuxt_plugin_axios_0fcbe911' // Source: ../plugins/axios.config (mode: 'all')
+import nuxt_plugin_iview_fabcf5d2 from 'nuxt_plugin_iview_fabcf5d2' // Source: ../plugins/iview (mode: 'client')
+import nuxt_plugin_echart_6ca10da0 from 'nuxt_plugin_echart_6ca10da0' // Source: ../plugins/echart (mode: 'client')
+import nuxt_plugin_nuxtquillplugin_3ab6ceae from 'nuxt_plugin_nuxtquillplugin_3ab6ceae' // Source: ../plugins/nuxt-quill-plugin.js (mode: 'client')
+import nuxt_plugin_axios_0fcbe911 from 'nuxt_plugin_axios_0fcbe911' // Source: ../plugins/axios.config (mode: 'client')
 
 // Component: <NoSsr>
 Vue.component(NoSsr.name, NoSsr)
@@ -155,19 +155,19 @@ async function createApp(ssrContext) {
     await nuxt_plugin_axios_aa9197b4(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_iview_fabcf5d2 === 'function') {
+  if (process.client && typeof nuxt_plugin_iview_fabcf5d2 === 'function') {
     await nuxt_plugin_iview_fabcf5d2(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_echart_6ca10da0 === 'function') {
+  if (process.client && typeof nuxt_plugin_echart_6ca10da0 === 'function') {
     await nuxt_plugin_echart_6ca10da0(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_nuxtquillplugin_3ab6ceae === 'function') {
+  if (process.client && typeof nuxt_plugin_nuxtquillplugin_3ab6ceae === 'function') {
     await nuxt_plugin_nuxtquillplugin_3ab6ceae(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_axios_0fcbe911 === 'function') {
+  if (process.client && typeof nuxt_plugin_axios_0fcbe911 === 'function') {
     await nuxt_plugin_axios_0fcbe911(app.context, inject)
   }
 
