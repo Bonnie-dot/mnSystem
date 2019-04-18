@@ -39,10 +39,10 @@
  justify-content: center;
  margin-top:10px; 
 }
-.details {
+.list .details {
  width: 81%;
 }
-.front .content{
+.front .list .content{
   width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
