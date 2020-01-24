@@ -25,6 +25,9 @@
 }
 .container .cal .user-info > div {
   flex: 3;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 .container .cal .user-info > .left {
   flex: 2;
@@ -49,9 +52,9 @@
   border-right: 1px solid #e8eaec;
 }
 .container .cal .cal-data > div > span {
-  width: 100px;
-  padding-top: 30px;
-  padding-left: 20px;
+  padding:0 20px;
+  text-align: center;
+  line-height: 140px;
 }
 .container .cal .cal-data .detail-number > span:last-child {
   font-size: 15px;
@@ -112,12 +115,11 @@
     <div class="cal">
       <div class="user-info">
         <div class="left">
-            <img src="~/assets/images/avator.jpg">
+            <img :src="userInfo.avator">
         </div>
         <div class="right">
           <span>用户名：{{ userInfo.username }}</span>
-          <span>最近登录时间：{{ userInfo.login_time|forMateData}}</span>
-          <span>最近登录地点：{{ userInfo.login_area }}</span>
+          <span>最近登录时间：{{userInfo.last_login_time|forMateData}}</span>
         </div>
       </div>
       <div class="cal-data">
@@ -169,29 +171,32 @@
 import { mapState,mapMutations  } from 'vuex'
 export default {
   async asyncData({$axios,store}){
-    let [res1,res2]=await Promise.all([
-         $axios.post('/admin/user/getUserInfo'),
-         $axios.get('/admin/visitor/queryVisitorNumber')
+    let [res2]=await Promise.all([
+        $axios.get('/admin/visitor/queryNumberListGroupByMonth'),
+        //  $axios.get('/admin/visitor/queryVisitorNumber')
     ]);
-    store.commit('admin/setUser',res1.data.data);
-    return {userInfo:res1.data.data,visit:res2.data.data};
+    return {visit:res2.data.data};
   },
   data() {
     return {
       todayVisit: 11,
       historyVisit: 300,
       recentltTime: '2019-1-19',
-      articleTotal: 200
+      articleTotal: 200,
     }
   },
   mounted() {
     this.getVisitNumber();
     this.getArticleNumber();
   },
+  computed: mapState('admin',{
+      userInfo:state=>state.user
+   }),
   filters:{
-    forMateData(d){
-      var d=new Date(d);
-      return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes();
+    forMateData(val){
+      let d=new Date(val);
+      let minutes=d.getMinutes()>=10?d.getMinutes():'0'+d.getMinutes();
+      return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+minutes;
     }
   },
   methods: {

@@ -2,18 +2,22 @@ const Koa = require('koa')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const router=require('koa-router')()
+const path=require('path')
 const bodyParser=require('koa-bodyparser')
-const session = require('koa-session');
+const session = require('koa-session')
 const app = new Koa()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-const admin=require('./routes/admin');
-const db=require('./models');
+const admin=require('./routes/admin')
+const db=require('./models')
+const server=require('koa-static')
 //session
-app.keys = ['some secret hurr'];
+app.keys = ['some secret hurr']
 app.use(session({}, app));
 //body-parseer
 app.use(bodyParser());
+//静态资源
+app.use(server(path.join(__dirname,'./public')));
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
 config.dev = !(app.env === 'production')

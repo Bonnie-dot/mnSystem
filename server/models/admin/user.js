@@ -11,10 +11,11 @@ let user=new Schema({
         type:String,
         default:'avator.jpg'
     },
-    login_area:{
-        type:String
-    },
     login_time:{
+        type:Date,
+        default:Date.now
+    },
+    last_login_time:{
         type:Date,
         default:Date.now
     }
