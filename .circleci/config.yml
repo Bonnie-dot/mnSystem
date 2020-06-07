@@ -19,16 +19,9 @@ jobs:
             - save_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
                 paths:
-                    - node_modules           
-    checklint:
-        executor: docker-image
-        steps:
-            - checkout
-            - node/install-packages:
-                cache-path: ~/mnSystem/node_modules
-                override-ci-command: npm install
+                    - node_modules   
             - run:
-                command: npm run lint    
+              command: npm run lint                   
 orbs: 
     node: circleci/node@3.0.0
 workflows:
@@ -38,9 +31,3 @@ workflows:
             filters:
                 branches:
                     only: master  
-        - checklint:
-            requires:
-                - build
-            filters:
-                branches:
-                    only: master    
