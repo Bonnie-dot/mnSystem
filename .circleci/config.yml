@@ -10,8 +10,8 @@ jobs:
             - checkout
             - run:
                 command: "sudo npm install -g npm@latest"  
-                - restore_cache:
-                    key: dependency-cache-{{ checksum "package-lock.json" }}
+            - restore_cache:
+                key: dependency-cache-{{ checksum "package-lock.json" }}
             - run:
                 command: npm install
             - save_cache:
