@@ -22,9 +22,11 @@ jobs:
                     - node_modules           
     checklint:
         executor: docker-image
-        cache-path: ~/mnSystem/node_modules
         steps:
             - checkout
+            - node/install-packages:
+                cache-path: ~/mnSystem/node_modules
+                override-ci-command: npm install
             - run:
                 command: npm run lint    
 orbs: 
