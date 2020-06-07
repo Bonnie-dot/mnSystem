@@ -5,7 +5,7 @@ executors:
         - image: 'cimg/base:stable'
 jobs:
     build:
-        executor: my-executor
+        executor: docker-image
         steps:
             - checkout
             - run:
@@ -19,7 +19,7 @@ jobs:
                 paths:
                     - node_modules      
     checklint:
-        executor: my-executor
+        executor: docker-image
         steps:
             - checkout
             - run:
