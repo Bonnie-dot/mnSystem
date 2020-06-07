@@ -7,7 +7,7 @@ const url = require('url')
 * @func
 * @des 用户登录
 */
-exports.login = async (ctx, next) => {
+exports.login = async (ctx) => {
     try {
         const {
             username,

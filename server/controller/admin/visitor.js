@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const auth = require('../../utils/auth')
 require('../../models/admin/visitor')
 const Visitor = mongoose.model('Visitor')
 const tools = require('../../utils/tool')
@@ -7,7 +6,7 @@ const tools = require('../../utils/tool')
 * @func
 * @des 查询访客今天访问量和总访问量
 */
-exports.queryVisitorNumber = async (ctx, next) => {
+exports.queryVisitorNumber = async (ctx) => {
     try {
         var obj = tools.formateDate(Date.now(), true);
         let res1 = await Visitor.find({ visited_time: { $gte: obj.today, $lt: obj.tomorrow } });

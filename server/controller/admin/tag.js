@@ -5,7 +5,7 @@ const Tag=mongoose.model('Tag')
 * @func 
 * @des 新建标签 
 */
-exports.insertTagData=async(ctx,next)=>{
+exports.insertTagData=async(ctx)=>{
     try {
         let name=ctx.request.body.name;
         let data=await Tag.findOne({tag_name:name}).exec()

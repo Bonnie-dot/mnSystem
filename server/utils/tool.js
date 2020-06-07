@@ -10,7 +10,7 @@ exports.formateDate=(date,later)=>{
     later&&(obj.tomorrow=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+(d.getDate()+1))
     return obj;
 }
-exports.getCurrentYearBoundary=_=>{
+exports.getCurrentYearBoundary=()=>{
     var year=new Date().getFullYear();
     return {
         startTime:year+'-01-01',

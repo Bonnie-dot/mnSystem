@@ -1,7 +1,6 @@
 const mongoose=require('mongoose')
 require('../../models/admin/article')
 const Article=mongoose.model('article')
-const tools = require('../../utils/tool')
 /**
 * @func 
 * @des 查询（分页查询）
