@@ -9,7 +9,6 @@ const host = process.env.HOST || 'localhost'
 const port = process.env.PORT || 3000
 const admin = require('./routes/admin')
 const front=require('./routes/front')
-const db = require('./models')
 const server = require('koa-static')
 const fs=require('fs')
 let uploadUrl=path.join(__dirname,'/public/upload')
@@ -20,7 +19,7 @@ app.use(koaBody({
   formidable: {
     uploadDir:uploadUrl,
     keepExtensions: true,// 保持扩展名
-    onFileBegin:(name,file) => { // 文件上传前的设置 删除之前的头像
+    onFileBegin:() => { // 文件上传前的设置 删除之前的头像
       
       fs.readdir(uploadUrl,(err,files)=>{
         files.forEach(filename=>{

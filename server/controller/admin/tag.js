@@ -46,7 +46,7 @@ exports.insertTagData=async(ctx)=>{
 *@func 
 *@des 读取标签数据 
 */
-exports.queryTags=async (ctx,next)=>{
+exports.queryTags=async (ctx)=>{
     try {
         let res=await Tag.find().exec();
         ctx.body = {
@@ -70,7 +70,7 @@ exports.queryTags=async (ctx,next)=>{
 * @func 
 * @des 删除标签
 */
-exports.deleteTag=async(ctx,next)=>{
+exports.deleteTag=async(ctx)=>{
     try {
         let res=await Tag.findOneAndDelete({_id:ctx.request.body.id}).exec()
         if(res){

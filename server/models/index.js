@@ -6,7 +6,7 @@ const User = mongoose.model('user_info')
 mongoose.connect(`mongodb://${config.mongodb.host}:${config.mongodb.prot}/${config.mongodb.database}`,{useNewUrlParser: true})
 var db = mongoose.connection; 
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open',async _=>{
+db.once('open',async ()=>{
  console.log(`mongodb://${config.mongodb.host}:${config.mongodb.prot}/${config.mongodb.database} connect is successfull`)
    let admin=await User.findOne({username:'Bonnie'});
    if(!admin){

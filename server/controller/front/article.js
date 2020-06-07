@@ -6,8 +6,7 @@ const Article=mongoose.model('article')
 * @des 查询（分页查询）
 */
 exports.queryArticle=async ctx=>{
-    let {limit=10,page=1}=ctx.request.body,
-        queryOption={}
+    let {limit=10,page=1}=ctx.request.body;
         limit=Number(limit)
         page=(page-1)*limit||0
     try {

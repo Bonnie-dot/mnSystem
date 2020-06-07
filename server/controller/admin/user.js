@@ -52,7 +52,7 @@ exports.login = async (ctx) => {
 * @func 
 * @des 获取管理员信息
 */
-exports.getUserInfo = async (ctx, next) => {
+exports.getUserInfo = async (ctx) => {
     try {
         let res =await User.findOne(ctx.request.body).exec()
         if (res) {
@@ -121,7 +121,7 @@ exports.uploadImg = async ctx => {
             success: false,
             code: 500,
             data: {
-                msg: err
+                msg: error
             }
 
         }
@@ -155,7 +155,7 @@ exports.updateUserNameById=async ctx=>{
             success: false,
             code: 500,
             data: {
-                msg: err
+                msg: error
             }
 
         }
@@ -189,7 +189,7 @@ exports.updateUserPassWordById=async ctx=>{
             success: false,
             code: 500,
             data: {
-                msg: err
+                msg: error
             }
 
         }

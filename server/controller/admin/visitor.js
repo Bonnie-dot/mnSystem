@@ -34,7 +34,7 @@ exports.queryVisitorNumber = async (ctx) => {
 * @func
 * @des 新增访客信息 待续...
 */
-exports.insertVisitor = async (ctx, next) => {
+exports.insertVisitor = async (ctx) => {
     try {
         var visitor = new Visitor({
             ip: '127.0.0.1',
@@ -55,7 +55,7 @@ exports.insertVisitor = async (ctx, next) => {
             success: false,
             code: 500,
             data: {
-                msg: err
+                msg: error
             }
         }
     }
@@ -65,7 +65,7 @@ exports.insertVisitor = async (ctx, next) => {
 * @func 
 * @des 访客人数列表 按当前年月份返回
 */
-exports.queryNumberList = async (ctx, next) => {
+exports.queryNumberList = async (ctx) => {
     try {
         let time = tools.getCurrentYearBoundary();
         let res = await Visitor.aggregate([
@@ -98,7 +98,7 @@ exports.queryNumberList = async (ctx, next) => {
             success: false,
             code: 500,
             data: {
-                msg: err
+                msg: error
             }
         }
     }

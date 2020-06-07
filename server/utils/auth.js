@@ -2,7 +2,7 @@ require('../models/admin/user')
 const mongoose=require('mongoose')
 const token=require('./token')
 let User=mongoose.model('user_info')
-module.exports=_=>{
+module.exports=()=>{
  return async (ctx,next)=>{
     let t=ctx.headers['x-access-token'];
     if(!t){
