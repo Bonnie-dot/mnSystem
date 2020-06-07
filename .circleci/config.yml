@@ -1,17 +1,41 @@
-jobs:
-    install-node-example:
+version: 2.1
+executors:
+    docker-image:
       docker:
         - image: 'cimg/base:stable'
-      steps:
-        - checkout
-        - node/install:
-            install-yarn: true
-            node-version: latest
-        - run: node --version
-  orbs:
+jobs:
+    build:
+        executor: my-executor
+        steps:
+            - checkout
+            - run:
+                command: "sudo npm install -g npm@latest"  
+                - restore_cache:
+                    key: dependency-cache-{{ checksum "package-lock.json" }}
+            - run:
+                command: npm install
+            - save_cache:
+                key: dependency-cache-{{ checksum "package-lock.json" }}
+                paths:
+                    - node_modules      
+    checklint:
+        executor: my-executor
+        steps:
+            - checkout
+            - run:
+                command: npm run lint    
+orbs:
     node: circleci/node@3.0.0
-  version: 2.1
-  workflows:
+workflows:
     test_my_app:
       jobs:
-        - install-node-example
+        - build:
+            filters:
+                branches:
+                    only: master  
+        - checkout:
+            requires:
+                - build
+            filters:
+                branches:
+                    only: master    
