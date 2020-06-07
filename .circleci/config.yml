@@ -22,6 +22,7 @@ jobs:
                     - node_modules           
     checklint:
         executor: docker-image
+        cache-path: ~/mnSystem/node_modules
         steps:
             - checkout
             - run:
