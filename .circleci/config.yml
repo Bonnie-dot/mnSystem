@@ -12,19 +12,21 @@ jobs:
                 command: "sudo npm install -g npm@latest"  
             - restore_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
-            - run:
-                command: npm install
+            - node/install:
+                install-yarn: true
+                node-version: latest
+            - run: node --version        
             - save_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
                 paths:
-                    - node_modules      
+                    - node_modules           
     checklint:
         executor: docker-image
         steps:
             - checkout
             - run:
                 command: npm run lint    
-orbs:
+orbs: 
     node: circleci/node@3.0.0
 workflows:
     test_my_app:
