@@ -2,7 +2,7 @@ version: 2.1
 executors:
     docker-image:
       docker:
-        - image: 'cimg/base:stable'
+        - image: circleci/node:dubnium-buster-browsers-legacy
 jobs:
     build:
         executor: docker-image
