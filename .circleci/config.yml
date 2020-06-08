@@ -16,9 +16,7 @@ jobs:
             - save_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
                 paths:
-                    - node_modules 
-            - run:
-                command: npm run build                  
+                    - node_modules              
     checklint:
         executor: docker-image
         steps:
