@@ -24,9 +24,8 @@ jobs:
         executor: docker-image
         steps:
             - checkout
-            - node/install-packages:
-                cache-path: ~/project/node_modules
-                override-ci-command: npm install
+            - path:
+                - node_modules  
             - run:
                 command: npm run lint    
 orbs: 
