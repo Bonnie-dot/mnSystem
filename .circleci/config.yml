@@ -21,12 +21,8 @@ jobs:
         executor: docker-image
         steps:
             - checkout 
-            - restore_cache:
-                key: dependency-cache-{{ checksum "package-lock.json" }}
-            - save_cache:
-                key: dependency-cache-{{ checksum "package-lock.json" }}
-                paths:
-                    - node_modules   
+            - node/install-packages:
+                cache-path: ~/mnSystem/node_modules
             - run:
                 command: npm run lint    
 workflows:
