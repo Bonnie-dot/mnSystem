@@ -25,7 +25,7 @@ jobs:
         steps:
             - checkout
             - node/install-packages:
-                cache-path: ~/mnSystem/node_modules
+                cache-path: ~/project/node_modules
                 override-ci-command: npm install
             - run:
                 command: npm run lint    
