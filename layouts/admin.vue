@@ -131,7 +131,7 @@ html {
       <Header>
         <Menu mode="horizontal" theme="dark" active-name="/admin/userInfo">
           <div class="header">
-            <div class="layout-logo">不积跬步，无以至千里</div>
+            <div class="layout-logo">不积跬步 无以至千里</div>
             <div class="user">
               <Dropdown @on-click="changeOper">
                 <a href="javascript:void(0)">
