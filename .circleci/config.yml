@@ -24,11 +24,11 @@ jobs:
         steps:
             - checkout 
             - restore_cache:
-              key: dependency-cache-{{ checksum "package-lock.json" }}
+                key: dependency-cache-{{ checksum "package-lock.json" }}
             - save_cache:
-              key: dependency-cache-{{ checksum "package-lock.json" }}
-              paths:
-                  - node_modules   
+                key: dependency-cache-{{ checksum "package-lock.json" }}
+                paths:
+                    - node_modules   
             - run:
                 command: npm run lint    
 workflows:
