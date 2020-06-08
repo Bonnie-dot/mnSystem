@@ -8,8 +8,6 @@ jobs:
         executor: docker-image
         steps:
             - checkout
-            - run:
-                command: "sudo npm install -g npm@latest"  
             - restore_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
             - run:
@@ -20,16 +18,19 @@ jobs:
                 paths:
                     - node_modules 
             - run:
-                name: "check lint"
-                command: npm run lint                  
-    # checklint:
-    #     executor: docker-image
-    #     steps:
-    #         - checkout 
-    #         - run:
-    #             command: npm run lint --path ../node_modules    
-orbs: 
-    node: circleci/node@3.0.0
+                command: npm run build                  
+    checklint:
+        executor: docker-image
+        steps:
+            - checkout 
+            - restore_cache:
+              key: dependency-cache-{{ checksum "package-lock.json" }}
+            - save_cache:
+              key: dependency-cache-{{ checksum "package-lock.json" }}
+              paths:
+                  - node_modules   
+            - run:
+                command: npm run lint    
 workflows:
     test_my_app:
       jobs:
@@ -37,9 +38,9 @@ workflows:
             filters:
                 branches:
                     only: master  
-        # - checklint:
-        #     requires:
-        #         - build
-        #     filters:
-        #         branches:
-        #             only: master    
+        - checklint:
+            requires:
+                - build
+            filters:
+                branches:
+                    only: master    
