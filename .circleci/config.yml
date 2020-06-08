@@ -23,11 +23,9 @@ jobs:
     checklint:
         executor: docker-image
         steps:
-            - checkout
-            - path:
-                - node_modules  
+            - checkout 
             - run:
-                command: npm run lint    
+                command: npm run lint --path node_modules    
 orbs: 
     node: circleci/node@3.0.0
 workflows:
