@@ -19,13 +19,13 @@ jobs:
             - save_cache:
                 key: dependency-cache-{{ checksum "package-lock.json" }}
                 paths:
-                    - node_modules           
+                    - ../node_modules           
     checklint:
         executor: docker-image
         steps:
             - checkout 
             - run:
-                command: npm run lint --path node_modules    
+                command: npm run lint --path ../node_modules    
 orbs: 
     node: circleci/node@3.0.0
 workflows:
