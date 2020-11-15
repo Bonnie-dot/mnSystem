@@ -1,4 +1,4 @@
-##介绍
+## 介绍
 > 个人博客，涉及到前后台，主要功能是文章管理、友链、标签、个人信息等模块
 ## 使用技术
 > nuxt+iview+vue-router+vuex+koa+nodejs+mongoose+echart+vue-quill-editor+web-storage-cache+jsonwebtoken
