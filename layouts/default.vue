@@ -64,11 +64,9 @@
           style=“display:block”
         >
           <img src="~assets/images/ba.png">
-          川公网安备 51010602000915号
         </a>
         <p>
           © 2019 - Bonnie Blog -
-          <a href="http://www.miitbeian.gov.cn/">蜀ICP备19008745号-1</a>
         </p>
       </Footer>
     </Content>

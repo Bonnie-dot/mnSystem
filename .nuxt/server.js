@@ -1,42 +1,71 @@
-import { stringify } from 'querystring'
 import Vue from 'vue'
-import fetch from 'node-fetch'
+import { joinURL, normalizeURL, withQuery } from 'ufo'
+import fetch from 'node-fetch-native'
 import middleware from './middleware.js'
-import { applyAsyncData, getMatchedComponents, middlewareSeries, promisify, urlJoin, sanitizeComponent } from './utils.js'
-import { createApp, NuxtError } from './index.js'
+import {
+   applyAsyncData,
+   middlewareSeries,
+   sanitizeComponent,
+  getMatchedComponents,
+  promisify
+} from './utils.js'
+  import fetchMixin from './mixins/fetch.server'
+import { createApp, NuxtError  } from './index.js'
 import NuxtLink from './components/nuxt-link.server.js' // should be included after ./index.js
 
-// Component: <NuxtLink>
-Vue.component(NuxtLink.name, NuxtLink)
-Vue.component('NLink', NuxtLink)
+  // Update serverPrefetch strategy
+  Vue.config.optionMergeStrategies.serverPrefetch = Vue.config.optionMergeStrategies.created
+
+  // Fetch mixin
+  if (!Vue.__nuxt__fetch__mixin__) {
+    Vue.mixin(fetchMixin)
+    Vue.__nuxt__fetch__mixin__ = true
+  }
+
+if (!Vue.__original_use__) {
+    Vue.__original_use__ = Vue.use
+    Vue.__install_times__ = 0
+    Vue.use = function (plugin, ...args) {
+      plugin.__nuxt_external_installed__ = Vue._installedPlugins.includes(plugin)
+      return Vue.__original_use__(plugin, ...args)
+    }
+  }
+  if (Vue.__install_times__ === 2) {
+    Vue.__install_times__ = 0
+    Vue._installedPlugins = Vue._installedPlugins.filter(plugin => {
+      return plugin.__nuxt_external_installed__ === true
+    })
+  }
+  Vue.__install_times__++
+
+      // Component: <NuxtLink>
+      Vue.component(NuxtLink.name, NuxtLink)
+       Vue.component('NLink', NuxtLink)
 
 if (!global.fetch) { global.fetch = fetch }
 
-const debug = require('debug')('nuxt:render')
-debug.color = 4 // force blue color
-
-const noopApp = () => new Vue({ render: h => h('div') })
+const noopApp = () => new Vue({ render: h => h('div', { domProps: { id: '__nuxt' } }) })
 
 const createNext = ssrContext => (opts) => {
+  // If static target, render on client-side
   ssrContext.redirected = opts
-  // If nuxt generate
-  if (!ssrContext.res) {
+  if (ssrContext.target === 'static' || !ssrContext.res) {
     ssrContext.nuxt.serverRendered = false
     return
   }
-  opts.query = stringify(opts.query)
-  opts.path = opts.path + (opts.query ? '?' + opts.query : '')
-  const routerBase = '/'
-  if (!opts.path.startsWith('http') && (routerBase !== '/' && !opts.path.startsWith(routerBase))) {
-    opts.path = urlJoin(routerBase, opts.path)
+  let fullPath = withQuery(opts.path, opts.query)
+  const $config = ssrContext.nuxt.config || {}
+  const routerBase = ($config._app && $config._app.basePath) || '/'
+  if (!fullPath.startsWith('http') && (routerBase !== '/' && !fullPath.startsWith(routerBase))) {
+    fullPath = joinURL(routerBase, fullPath)
   }
   // Avoid loop redirect
-  if (opts.path === ssrContext.url) {
+  if (decodeURI(fullPath) === decodeURI(ssrContext.url)) {
     ssrContext.redirected = false
     return
   }
   ssrContext.res.writeHead(opts.status, {
-    'Location': opts.path
+    Location: normalizeURL(fullPath)
   })
   ssrContext.res.end()
 }
@@ -52,97 +81,146 @@ export default async (ssrContext) => {
   ssrContext.next = createNext(ssrContext)
   // Used for beforeNuxtRender({ Components, nuxtState })
   ssrContext.beforeRenderFns = []
-  // Nuxt object (window{{globals.context}}, defaults to window.__NUXT__)
-  ssrContext.nuxt = { layout: 'default', data: [], error: null, state: null, serverRendered: true }
-  // Create the app definition and the instance (created for each request)
-  const { app, router, store } = await createApp(ssrContext)
-  const _app = new Vue(app)
+  // for beforeSerialize(nuxtState)
+  ssrContext.beforeSerializeFns = []
+  // Nuxt object (window.{{globals.context}}, defaults to window.__NUXT__)
+  ssrContext.nuxt = {  layout: 'default',  data: [],  fetch: { },  error: null , state: null, serverRendered: true, routePath: ''
+}
 
-  // Add meta infos (used in renderer.js)
-  ssrContext.meta = _app.$meta()
+  ssrContext.fetchCounters = { }
+
+  // Remove query from url is static target
+
+  // Public runtime config
+  ssrContext.nuxt.config = ssrContext.runtimeConfig.public
+if (ssrContext.nuxt.config._app) {
+  __webpack_public_path__ = joinURL(ssrContext.nuxt.config._app.cdnURL, ssrContext.nuxt.config._app.assetsPath)
+}
+// Create the app definition and the instance (created for each request)
+const { app, router, store } = await createApp(ssrContext, ssrContext.runtimeConfig.private)
+const _app = new Vue(app)
+// Add ssr route path to nuxt context so we can account for page navigation between ssr and csr
+ssrContext.nuxt.routePath = app.context.route.path
+
+    // Add meta infos (used in renderer.js)
+    ssrContext.meta = _app.$meta()
+
   // Keep asyncData for each matched component in ssrContext (used in app/utils.js via this.$ssrContext)
-  ssrContext.asyncData = {}
+  ssrContext.asyncData = { }
 
   const beforeRender = async () => {
-    // Call beforeNuxtRender() methods
-    await Promise.all(ssrContext.beforeRenderFns.map(fn => promisify(fn, { Components, nuxtState: ssrContext.nuxt })))
+  // Call beforeNuxtRender() methods
+  await Promise.all(ssrContext.beforeRenderFns.map(fn => promisify(fn, { Components, nuxtState: ssrContext.nuxt })))
 
-    // Add the state from the vuex store
-    ssrContext.nuxt.state = store.state
+  ssrContext.rendered = () => {
+    // Call beforeSerialize() hooks
+    ssrContext.beforeSerializeFns.forEach(fn => fn(ssrContext.nuxt))
+
+        // Add the state from the vuex store
+        ssrContext.nuxt.state = store.state
+    }
+}
+
+const renderErrorPage = async () => {
+  // Don't server-render the page in static target
+  if (ssrContext.target === 'static') {
+    ssrContext.nuxt.serverRendered = false
   }
-  const renderErrorPage = async () => {
+
     // Load layout for error page
-    const errLayout = (typeof NuxtError.layout === 'function' ? NuxtError.layout(app.context) : NuxtError.layout)
+    const layout = (NuxtError.options || NuxtError).layout
+    const errLayout = typeof layout === 'function' ? layout.call(NuxtError, app.context) : layout
     ssrContext.nuxt.layout = errLayout || 'default'
     await _app.loadLayout(errLayout)
     _app.setLayout(errLayout)
-    await beforeRender()
-    return _app
-  }
-  const render404Page = () => {
-    app.context.error({ statusCode: 404, path: ssrContext.url, message: `This page could not be found` })
-    return renderErrorPage()
-  }
+
+        await beforeRender()
+  return _app
+}
+const render404Page = () => {
+  app.context.error({ statusCode: 404, path: ssrContext.url, message: 'This page could not be found' })
+  return renderErrorPage()
+}
 
   const s = Date.now()
 
   // Components are already resolved by setContext -> getRouteData (app/utils.js)
-  const Components = getMatchedComponents(router.match(ssrContext.url))
+  const Components = getMatchedComponents(app.context.route)
 
   /*
   ** Dispatch store nuxtServerInit
   */
   if (store._actions && store._actions.nuxtServerInit) {
-    try {
-      await store.dispatch('nuxtServerInit', app.context)
-    } catch (err) {
-      debug('error occurred when calling nuxtServerInit: ', err.message)
+      try {
+        await store.dispatch('nuxtServerInit', app.context)
+      } catch (err) {
+        console.debug('Error occurred when calling nuxtServerInit: ', err.message)
       throw err
+      }
     }
-  }
-  // ...If there is a redirect or an error, stop the process
-  if (ssrContext.redirected) return noopApp()
-  if (ssrContext.nuxt.error) return renderErrorPage()
+    // ...If there is a redirect or an error, stop the process
+    if (ssrContext.redirected) {
+      return noopApp()
+    }
+    if (ssrContext.nuxt.error) {
+      return renderErrorPage()
+    }
 
   /*
   ** Call global middleware (nuxt.config.js)
   */
   let midd = []
-  midd = midd.map((name) => {
-    if (typeof name === 'function') return name
-    if (typeof middleware[name] !== 'function') {
-      app.context.error({ statusCode: 500, message: 'Unknown middleware ' + name })
-    }
-    return middleware[name]
-  })
+    midd = midd.map((name) => {
+      if (typeof name === 'function') {
+        return name
+      }
+      if (typeof middleware[name] !== 'function') {
+        app.context.error({ statusCode: 500, message: 'Unknown middleware ' + name })
+      }
+      return middleware[name]
+    })
   await middlewareSeries(midd, app.context)
   // ...If there is a redirect or an error, stop the process
-  if (ssrContext.redirected) return noopApp()
-  if (ssrContext.nuxt.error) return renderErrorPage()
+  if (ssrContext.redirected) {
+    return noopApp()
+  }
+  if (ssrContext.nuxt.error) {
+    return renderErrorPage()
+  }
 
   /*
   ** Set layout
   */
   let layout = Components.length ? Components[0].options.layout : NuxtError.layout
-  if (typeof layout === 'function') layout = layout(app.context)
+  if (typeof layout === 'function') {
+    layout = layout(app.context)
+  }
   await _app.loadLayout(layout)
-  if (ssrContext.nuxt.error) return renderErrorPage()
+  if (ssrContext.nuxt.error) {
+    return renderErrorPage()
+  }
   layout = _app.setLayout(layout)
   ssrContext.nuxt.layout = _app.layoutName
 
   /*
   ** Call middleware (layout + pages)
   */
-  midd = []
-  layout = sanitizeComponent(layout)
-  if (layout.options.middleware) midd = midd.concat(layout.options.middleware)
-  Components.forEach((Component) => {
-    if (Component.options.middleware) {
-      midd = midd.concat(Component.options.middleware)
-    }
-  })
+  midd =[]
+
+      layout = sanitizeComponent(layout)
+      if (layout.options.middleware) {
+        midd = midd.concat(layout.options.middleware)
+      }
+
+    Components.forEach((Component) => {
+      if (Component.options.middleware) {
+        midd = midd.concat(Component.options.middleware)
+      }
+    })
   midd = midd.map((name) => {
-    if (typeof name === 'function') return name
+    if (typeof name === 'function') {
+      return name
+    }
     if (typeof middleware[name] !== 'function') {
       app.context.error({ statusCode: 500, message: 'Unknown middleware ' + name })
     }
@@ -150,8 +228,12 @@ export default async (ssrContext) => {
   })
   await middlewareSeries(midd, app.context)
   // ...If there is a redirect or an error, stop the process
-  if (ssrContext.redirected) return noopApp()
-  if (ssrContext.nuxt.error) return renderErrorPage()
+  if (ssrContext.redirected) {
+    return noopApp()
+  }
+  if (ssrContext.nuxt.error) {
+    return renderErrorPage()
+  }
 
   /*
   ** Call .validate()
@@ -180,53 +262,57 @@ export default async (ssrContext) => {
 
   // ...If .validate() returned false
   if (!isValid) {
-    // Don't server-render the page in generate mode
-    if (ssrContext._generate) ssrContext.nuxt.serverRendered = false
     // Render a 404 error page
     return render404Page()
   }
 
   // If no Components found, returns 404
-  if (!Components.length) return render404Page()
+  if (!Components.length) {
+  return render404Page()
+}
 
   // Call asyncData & fetch hooks on components matched by the route.
   const asyncDatas = await Promise.all(Components.map((Component) => {
-    const promises = []
+  const promises = []
 
     // Call asyncData(context)
     if (Component.options.asyncData && typeof Component.options.asyncData === 'function') {
       const promise = promisify(Component.options.asyncData, app.context)
-      promise.then((asyncDataResult) => {
-        ssrContext.asyncData[Component.cid] = asyncDataResult
-        applyAsyncData(Component)
-        return asyncDataResult
-      })
+        .then((asyncDataResult) => {
+          ssrContext.asyncData[Component.cid] = asyncDataResult
+          applyAsyncData(Component)
+          return asyncDataResult
+        })
       promises.push(promise)
     } else {
       promises.push(null)
     }
 
     // Call fetch(context)
-    if (Component.options.fetch) {
+    if (Component.options.fetch && Component.options.fetch.length) {
       promises.push(Component.options.fetch(app.context))
     } else {
       promises.push(null)
     }
 
     return Promise.all(promises)
-  }))
+}))
 
-  if (asyncDatas.length) debug('Data fetching ' + ssrContext.url + ': ' + (Date.now() - s) + 'ms')
+    if (process.env.DEBUG && asyncDatas.length) console.debug('Data fetching ' + ssrContext.url + ': ' + (Date.now() - s) + 'ms')
 
-  // datas are the first row of each
-  ssrContext.nuxt.data = asyncDatas.map(r => r[0] || {})
+      // datas are the first row of each
+      ssrContext.nuxt.data = asyncDatas.map(r => r[0] || {})
 
   // ...If there is a redirect or an error, stop the process
-  if (ssrContext.redirected) return noopApp()
-  if (ssrContext.nuxt.error) return renderErrorPage()
+  if (ssrContext.redirected) {
+  return noopApp()
+}
+if (ssrContext.nuxt.error) {
+  return renderErrorPage()
+}
 
-  // Call beforeNuxtRender methods & add store state
-  await beforeRender()
+// Call beforeNuxtRender methods & add store state
+await beforeRender()
 
-  return _app
+return _app
 }
